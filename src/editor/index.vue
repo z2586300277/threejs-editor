@@ -81,7 +81,7 @@
     </div>
   </div>
 
-  <Editor class="editor" />
+  <Editor :dataCores="dataCores" class="editor" />
 </template>
 
 <script setup>
@@ -99,7 +99,7 @@ const rightCollapsed = ref(false);
 
 // 基础数据
 const dataCores = reactive({
-  sceneName: '测试场景',
+  sceneName: localStorage.getItem('sceneName') || '',
   options: JSON.parse(localStorage.getItem('sceneList')) || [{ name: '测试场景' }]
 })
 
