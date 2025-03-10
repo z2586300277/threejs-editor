@@ -3,15 +3,20 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
+import { ThreeEditor } from '../../../Vite_three-editor/lib/main'
 // import { ThreeEditor } from '../../../Vite_three-editor/dist/index'
-import { ThreeEditor } from 'three-edit-cores'
+// import { ThreeEditor } from 'three-edit-cores'
+
+// ThreeEditor.dracoPath = '/draco/' 
 
 const editor = ref(null)
 
+window.threeEditor = null
+
 function init() {
 
-    const threeEditor = new ThreeEditor(editor.value, {
+    threeEditor = new ThreeEditor(editor.value, {
 
         fps: null,
 
@@ -19,17 +24,29 @@ function init() {
 
         webglRenderParams: { antialias: true, alpha: true, logarithmicDepthBuffer: true },
 
-        sceneParams: null
+        sceneParams: JSON.parse(localStorage.getItem('sceneStorage'))
 
     })
 
     threeEditor.openControlPanel()
 
+    window.addEventListener('resize', () => {
+
+        threeEditor.renderSceneResize()
+
+    })
+
 }
 
 onMounted(() => {
 
-    init()
+    init();
+
+})
+
+onUnmounted(() => {
+
+    threeEditor?.destroySceneRender()
 
 });
 
