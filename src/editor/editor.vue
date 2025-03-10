@@ -4,14 +4,14 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { ThreeEditor } from '../../../Vite_three-editor/dist/index'
-// import { ThreeEditor } from 'three-edit-cores'
+// import { ThreeEditor } from '../../../Vite_three-editor/dist/index'
+import { ThreeEditor } from 'three-edit-cores'
 
 const editor = ref(null)
 
-onMounted(() => {
+function init() {
 
-    new ThreeEditor(editor.value, {
+    const threeEditor = new ThreeEditor(editor.value, {
 
         fps: null,
 
@@ -22,6 +22,14 @@ onMounted(() => {
         sceneParams: null
 
     })
+
+    threeEditor.openControlPanel()
+
+}
+
+onMounted(() => {
+
+    init()
 
 });
 
