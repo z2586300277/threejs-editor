@@ -4,14 +4,43 @@
     <div class="header">
       <div class="header-box">
         <div class="header-left">
-          <el-select v-model="sceneName" placeholder="场景" size="large" style="width: 200px">
-            <el-option label="测试场景" value="测试场景" />
-            <el-option label="默认场景" value="默认场景" />
+          <el-select v-model="dataCores.sceneName" class="m-2" placeholder="场景" size="large" style="width: 200px">
+            <el-option v-for="item in dataCores.options" :key="item.name" :label="item.name" :value="item.name"
+              style="color:rgb(255, 255, 255)">
+              <div style="width: 100%;display: flex;justify-content: space-between;">
+                <span>{{ item.name }} </span>
+                <span>
+                  <el-popconfirm title="确定删除？" @confirm="() => delScene(item)">
+                    <template #reference>
+                      <el-icon style="color: aliceblue;">
+                        <Close />
+                      </el-icon>
+                    </template>
+                  </el-popconfirm>
+                </span>
+              </div>
+            </el-option>
           </el-select>
-          <el-button class="btn-add" link>新建场景</el-button>
+          <el-button class="btn-add" link icon="plus" @click="dialogVisible = true">新建场景</el-button>
+          <!-- <el-upload class="upload" ref="myUpload" :auto-upload="false" action="" :on-change="uploadChange">
+            <el-button class="btn-add" link icon="plus">模型导入此场景</el-button></el-upload> -->
+          <el-dialog v-model="dialogVisible" title="命名场景" width="500">
+            <el-input v-model="inputSceneName" placeholder="请输入场景名称" />
+            <template #footer>
+              <div class="dialog-footer">
+                <el-button @click="dialogVisible = false">取消</el-button>
+                <el-button @click="createEditor">
+                  确认
+                </el-button>
+              </div>
+            </template>
+          </el-dialog>
         </div>
         <div class="title">Three.js Editor</div>
         <div class="header-right">
+          <el-button class="btn-add" link icon="Document" @click="exportTemplateJson">导出</el-button>
+          <el-button @click="pict" icon="camera"></el-button>
+          <el-button @click="() => threeEditor?.openControlPanel()">控制板</el-button>
           <el-button @click="saveScene">保存</el-button>
         </div>
       </div>
@@ -56,24 +85,69 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { reactive, ref, watch } from 'vue'
 import Editor from './editor.vue'
 import { ElButton, ElSelect, ElOption, ElMessage } from 'element-plus'
 
-// 基础数据
-const sceneName = ref('测试场景')
+const dialogVisible = ref(false);
+const inputSceneName = ref('');
 const currentMode = ref('选中')
 
 // 面板状态
 const leftCollapsed = ref(false)
 const rightCollapsed = ref(false);
 
+// 基础数据
+const dataCores = reactive({
+  sceneName: '测试场景',
+  options: JSON.parse(localStorage.getItem('sceneList')) || [{ name: '测试场景' }]
+})
+
+function saveLocal() {
+  localStorage.setItem('sceneList', JSON.stringify(dataCores.options))
+  localStorage.setItem('sceneName', dataCores.sceneName)
+}
+
+function createEditor() {
+  if (dataCores.options.some(item => item.name === inputSceneName.value)) return ElMessage.error('场景名称已存在')
+  dataCores.options.push({ name: inputSceneName.value })
+  dataCores.sceneName = inputSceneName.value
+  ElMessage.success(dataCores.sceneName + '添加成功')
+  saveLocal()
+  dialogVisible.value = false
+}
+
+function delScene(item) {
+  const index = dataCores.options.findIndex(i => i.name === item.name)
+  if (index > -1) {
+    dataCores.options.splice(index, 1)
+    localStorage.removeItem(item.name)
+    saveLocal()
+  }
+}
+
+function exportTemplateJson() {
+  if (!threeEditor) return ElMessage.error('没有可导出的场景')
+  const blob = new Blob([JSON.stringify(threeEditor.saveSceneEdit())], { type: 'application/json' })
+  const link = document.createElement('a')
+  link.href = URL.createObjectURL(blob)
+  link.download = Date.now() + '.json'
+  link.click()
+}
+
+function pict() {
+  const base64 = threeEditor.getSceneEditorImage(['image/png', '0.8'])
+  const link = document.createElement('a');
+  link.href = base64;
+  link.download = 'myImage.png';
+  link.click();
+}
+
 function saveScene() {
-
-  localStorage.setItem('sceneStorage', JSON.stringify(threeEditor.saveSceneEdit()))
-
+  if (dataCores.options.find(item => item.name === dataCores.sceneName)) localStorage.setItem(dataCores.sceneName, JSON.stringify(threeEditor.saveSceneEdit()))
+  else dataCores.sceneName = ''
   ElMessage.success('保存成功')
-
+  saveLocal()
 }
 </script>
 
