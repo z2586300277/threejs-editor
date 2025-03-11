@@ -1,0 +1,577 @@
+{
+    "scene": {
+        "backgroundBlurriness": 0,
+        "backgroundIntensity": 1,
+        "backgroundUrls": null,
+        "environmentEnabled": false
+    },
+    "perspectiveCamera": {
+        "fov": 50,
+        "near": 0.1,
+        "far": 100000,
+        "zoom": 1,
+        "layers": {
+            "mask": 1
+        },
+        "filmOffset": 0,
+        "filmGauge": 35,
+        "position": {
+            "x": 185.84226927507217,
+            "y": 61.230616372621164,
+            "z": -116.331662016904
+        }
+    },
+    "webglRenderer": {
+        "outputColorSpace": "srgb",
+        "toneMapping": 0,
+        "toneMappingExposure": 1,
+        "shadowMap": {
+            "enabled": false,
+            "type": 1
+        },
+        "color": 0,
+        "opacity": 0,
+        "sortObjects": true,
+        "localClippingEnabled": false,
+        "autoClear": true,
+        "autoClearColor": true,
+        "renderListCompare": [
+            {
+                "name": "stats",
+                "enabled": true
+            },
+            {
+                "name": "controls",
+                "enabled": true
+            },
+            {
+                "name": "scene",
+                "enabled": true
+            },
+            {
+                "name": "css3DRender",
+                "enabled": true
+            },
+            {
+                "name": "css2DRender",
+                "enabled": true
+            }
+        ]
+    },
+    "orbitControls": {
+        "autoRotate": false,
+        "autoRotateSpeed": 2,
+        "enableDamping": true,
+        "dampingFactor": 0.05,
+        "minDistance": 0.01,
+        "maxDistance": 1000000,
+        "maxAzimuthAngle": null,
+        "minAzimuthAngle": null,
+        "maxPolarAngle": 3.141592653589793,
+        "minPolarAngle": 0,
+        "maxTargetRadius": null,
+        "minTargetRadius": 0,
+        "enablePan": true,
+        "panSpeed": 1,
+        "enableRotate": true,
+        "rotateSpeed": 1,
+        "enableZoom": true,
+        "zoomSpeed": 1,
+        "zoomToCursor": false,
+        "target": {
+            "x": 45.40893250296513,
+            "y": -16.681509054225835,
+            "z": -48.58527455010985
+        }
+    },
+    "transformControls": {
+        "mode": "translate",
+        "space": "world",
+        "size": 1,
+        "showX": true,
+        "showY": true,
+        "showZ": true,
+        "translationSnap": null,
+        "rotationSnap": null,
+        "scaleSnap": null
+    },
+    "effectComposer": {
+        "renderWay": "effectComposer",
+        "fxaaPass": {
+            "enabled": true,
+            "order": 60,
+            "multPixel": 1
+        },
+        "outlinePass": {
+            "enabled": true,
+            "order": 40,
+            "edgeStrength": 3,
+            "edgeGlow": 0,
+            "edgeThickness": 1,
+            "pulsePeriod": 0,
+            "usePatternTexture": false,
+            "visibleEdgeColor": 16449071,
+            "hiddenEdgeColor": 16449071,
+            "overlayMaterial": {
+                "blending": 5,
+                "blendEquation": 100,
+                "blendSrc": 201,
+                "blendDst": 205
+            }
+        },
+        "saoPass": {
+            "enabled": false,
+            "order": 10,
+            "saoBias": 0.5,
+            "saoIntensity": 0.01,
+            "saoScale": 100,
+            "saoKernelRadius": 100,
+            "saoMinResolution": 0,
+            "saoBlur": true,
+            "saoBlurRadius": 8,
+            "saoBlurStdDev": 4,
+            "saoBlurDepthCutoff": 0.01
+        },
+        "screenMaskPass": {
+            "enabled": false,
+            "order": 70,
+            "intensity": 1,
+            "maskColor": 16777215,
+            "R": 0.2,
+            "sr": 1.2
+        },
+        "ssrPass": {
+            "enabled": false,
+            "order": 30,
+            "maxDistance": 0.01,
+            "distanceAttenuation": true,
+            "opacity": 0.5,
+            "thickness": 0.018,
+            "fresnel": true,
+            "infiniteThick": false,
+            "bouncing": false
+        },
+        "unrealBloomPass": {
+            "enabled": false,
+            "order": 20,
+            "strength": 1.5,
+            "radius": 0.4,
+            "threshold": 0.85
+        }
+    },
+    "handler": {
+        "mode": "transform",
+        "openKeyEnable": true,
+        "rightClickMenusEnable": true,
+        "selectChildEnabled": false,
+        "selectChildLevel": 1,
+        "stats": {
+            "showStats": false,
+            "statsMode": 0
+        },
+        "helpers": {
+            "axes": {
+                "showAxes": true,
+                "axesLength": 1000
+            },
+            "grid": {
+                "showGrid": true,
+                "size": 1000,
+                "divisions": 15,
+                "colorCenterLine": 4473924,
+                "colorGrid": 8947848
+            },
+            "box3": {
+                "useBox3": true,
+                "color": 16776960
+            }
+        }
+    },
+    "lightCores": [
+        {
+            "name": "",
+            "type": "DirectionalLight",
+            "visible": true,
+            "position": {
+                "x": -190.71069013658376,
+                "y": 348.6534390712952,
+                "z": -385.8834782712556
+            },
+            "color": 16777215,
+            "intensity": 1,
+            "castShadow": false,
+            "layers": {
+                "mask": 1
+            },
+            "shadow": {
+                "bias": 0,
+                "radius": 1,
+                "mapSize": {
+                    "x": 512,
+                    "y": 512
+                },
+                "normalBias": 0,
+                "camera": {
+                    "near": 0.5,
+                    "far": 500,
+                    "left": -5,
+                    "right": 5,
+                    "top": 5,
+                    "bottom": -5
+                }
+            },
+            "target": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            }
+        }
+    ],
+    "innerCores": [],
+    "modelCores": [],
+    "drawCores": [
+        {
+            "points": [
+                {
+                    "x": 6.107615191377498,
+                    "y": 0.08590000000081145,
+                    "z": -110.51790977901433
+                },
+                {
+                    "x": 56.22154867747107,
+                    "y": 0.08590000000066934,
+                    "z": -93.93485340883973
+                },
+                {
+                    "x": 71.48376954894826,
+                    "y": 0.05570000000052637,
+                    "z": -63.67975296761681
+                },
+                {
+                    "x": 15.91246308317995,
+                    "y": 0.0003000000006963319,
+                    "z": -61.95940779485836
+                }
+            ],
+            "mode": "face",
+            "materialType": "MeshBasicMaterial",
+            "name": "",
+            "visible": true,
+            "renderOrder": 0,
+            "castShadow": false,
+            "receiveShadow": false,
+            "material": {
+                "visible": true,
+                "type": "MeshBasicMaterial",
+                "side": 2,
+                "wireframe": false,
+                "color": 12767263,
+                "vertexColors": false,
+                "toneMapped": true,
+                "transparent": true,
+                "opacity": 0.8,
+                "alphaTest": 0,
+                "depthTest": true,
+                "depthWrite": true,
+                "alphaHash": false,
+                "alphaToCoverage": false,
+                "blending": 1,
+                "envMap": false,
+                "reflectivity": 1
+            },
+            "position": {
+                "x": 0,
+                "y": 20.561302393390235,
+                "z": 0
+            },
+            "rotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            },
+            "scale": {
+                "x": 1,
+                "y": 1,
+                "z": 1
+            },
+            "layers": {
+                "mask": 1
+            }
+        },
+        {
+            "points": [
+                {
+                    "x": 15.818002004171191,
+                    "y": 6.750155989720952e-13,
+                    "z": -50.97805347520865
+                },
+                {
+                    "x": 11.385455995746717,
+                    "y": 4.902744876744691e-13,
+                    "z": -13.216796186848718
+                },
+                {
+                    "x": 61.40630972074942,
+                    "y": 5.115907697472721e-13,
+                    "z": -18.500317401616503
+                },
+                {
+                    "x": 123.86354394849128,
+                    "y": 3.979039320256561e-13,
+                    "z": -32.331113846799695
+                }
+            ],
+            "mode": "fence",
+            "materialType": "MeshBasicMaterial",
+            "fenceHeight": 37,
+            "fenceClose": false,
+            "name": "",
+            "visible": true,
+            "renderOrder": 0,
+            "castShadow": false,
+            "receiveShadow": false,
+            "material": {
+                "visible": true,
+                "type": "MeshBasicMaterial",
+                "side": 2,
+                "wireframe": false,
+                "color": 8849552,
+                "vertexColors": false,
+                "toneMapped": true,
+                "transparent": true,
+                "opacity": 0.8,
+                "alphaTest": 0,
+                "depthTest": true,
+                "depthWrite": true,
+                "alphaHash": false,
+                "alphaToCoverage": false,
+                "blending": 1,
+                "envMap": false,
+                "reflectivity": 1
+            },
+            "position": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            },
+            "rotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            },
+            "scale": {
+                "x": 1,
+                "y": 1,
+                "z": 1
+            },
+            "layers": {
+                "mask": 1
+            },
+            "blendShaderPrograms": {
+                "shaderProgramsCodeName": "流光围栏",
+                "isBlendShaderPrograms": true,
+                "uvType": "material",
+                "uniforms": {
+                    "iTime": 2252.9999999994307,
+                    "speed": 0.05,
+                    "intensity": 3.36,
+                    "density": 17.19,
+                    "mixColor": 10988265,
+                    "high": 0.5,
+                    "medium": 0.4
+                }
+            }
+        },
+        {
+            "points": [
+                {
+                    "x": 130.1174665284301,
+                    "y": -12.910356842227714,
+                    "z": -10.722628921665148
+                },
+                {
+                    "x": 127.64526386058311,
+                    "y": -12.910356842227458,
+                    "z": -60.582274126008386
+                },
+                {
+                    "x": 79.41799615764316,
+                    "y": -12.188748683424024,
+                    "z": -85.61780109389606
+                },
+                {
+                    "x": 39.53170465156376,
+                    "y": 26.874387046079207,
+                    "z": -95.88398543764193
+                },
+                {
+                    "x": 85.54462279112494,
+                    "y": 29.705741227919148,
+                    "z": -45.4475187202967
+                },
+                {
+                    "x": 120.35953940103532,
+                    "y": 7.80957233669659,
+                    "z": -40.19193218871101
+                },
+                {
+                    "x": 107.31316987760631,
+                    "y": -12.276009106529685,
+                    "z": -54.41051942908638
+                }
+            ],
+            "mode": "curveTube",
+            "materialType": "MeshBasicMaterial",
+            "waveEnabled": false,
+            "waveHeight": 10,
+            "waveAxial": "y",
+            "tubularSegments": 64,
+            "radius": 1,
+            "radialSegments": 8,
+            "closed": false,
+            "name": "",
+            "visible": true,
+            "renderOrder": 0,
+            "castShadow": false,
+            "receiveShadow": false,
+            "material": {
+                "visible": true,
+                "type": "MeshBasicMaterial",
+                "side": 2,
+                "wireframe": false,
+                "color": 7192029,
+                "vertexColors": false,
+                "toneMapped": true,
+                "transparent": true,
+                "opacity": 0.267,
+                "alphaTest": 0.063,
+                "depthTest": true,
+                "depthWrite": true,
+                "alphaHash": false,
+                "alphaToCoverage": false,
+                "blending": 1,
+                "envMap": false,
+                "reflectivity": 1
+            },
+            "position": {
+                "x": -41.87907356666496,
+                "y": -4.612934507429387,
+                "z": -12.830332820535991
+            },
+            "rotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            },
+            "scale": {
+                "x": 1,
+                "y": 1,
+                "z": 1
+            },
+            "layers": {
+                "mask": 1
+            }
+        },
+        {
+            "points": [
+                {
+                    "x": 100.24753159689226,
+                    "y": 14.769946038713755,
+                    "z": -27.101484520116088
+                },
+                {
+                    "x": 94.539220848756,
+                    "y": -12.910176621329,
+                    "z": -26.642741403579237
+                },
+                {
+                    "x": 53.762870656785225,
+                    "y": 20.62375702796016,
+                    "z": -75.66813709837314
+                },
+                {
+                    "x": 39.433268655300274,
+                    "y": -12.910058302867384,
+                    "z": -88.5280449751576
+                },
+                {
+                    "x": 114.5722642484696,
+                    "y": -12.910043354883257,
+                    "z": -29.31313864231788
+                },
+                {
+                    "x": 120.15437662131222,
+                    "y": -12.910000593162025,
+                    "z": -96.10210140238755
+                }
+            ],
+            "mode": "straight",
+            "materialType": "MeshBasicMaterial",
+            "lineWidth": 2,
+            "name": "",
+            "visible": true,
+            "renderOrder": 0,
+            "castShadow": false,
+            "receiveShadow": false,
+            "material": {
+                "visible": true,
+                "type": "LineMaterial",
+                "side": 0,
+                "wireframe": false,
+                "color": 16777215,
+                "vertexColors": false,
+                "toneMapped": true,
+                "transparent": false,
+                "opacity": 1,
+                "alphaTest": 0,
+                "depthTest": true,
+                "depthWrite": true,
+                "alphaHash": false,
+                "alphaToCoverage": false,
+                "blending": 1,
+                "envMap": false
+            },
+            "position": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            },
+            "rotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            },
+            "scale": {
+                "x": 1,
+                "y": 1,
+                "z": 1
+            },
+            "layers": {
+                "mask": 1
+            }
+        }
+    ],
+    "textCores": [],
+    "particleCores": [],
+    "geoCores": {
+        "url": "https://z2586300277.github.io/3d-file-server/files/json/china.json",
+        "isListMaterial": false,
+        "geoEvent": false,
+        "geoEventType": "click",
+        "geoEventParams": {
+            "name": "",
+            "_scale": 1,
+            "scale": 2,
+            "duration": 0.5
+        },
+        "list": []
+    },
+    "designCores": [],
+    "other": {
+        "viewAngleList": [],
+        "clipping": {
+            "size": 20,
+            "clipList": []
+        }
+    }
+}
