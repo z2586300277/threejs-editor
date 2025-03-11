@@ -16,9 +16,9 @@
         "filmOffset": 0,
         "filmGauge": 35,
         "position": {
-            "x": 10,
-            "y": 10,
-            "z": 10.000000000000002
+            "x": 978.8003660982597,
+            "y": 769.3507777162238,
+            "z": 539.3349809640063
         }
     },
     "webglRenderer": {
@@ -79,9 +79,9 @@
         "zoomSpeed": 1,
         "zoomToCursor": false,
         "target": {
-            "x": 0,
-            "y": 0,
-            "z": 0
+            "x": -51.60428016756185,
+            "y": -48.782089166247275,
+            "z": -38.5046086586745
         }
     },
     "transformControls": {
@@ -187,7 +187,46 @@
             }
         }
     },
-    "lightCores": [],
+    "lightCores": [
+        {
+            "name": "",
+            "type": "DirectionalLight",
+            "visible": true,
+            "position": {
+                "x": -190.71069013658376,
+                "y": 348.6534390712952,
+                "z": -385.8834782712556
+            },
+            "color": 16777215,
+            "intensity": 1,
+            "castShadow": false,
+            "layers": {
+                "mask": 1
+            },
+            "shadow": {
+                "bias": 0,
+                "radius": 1,
+                "mapSize": {
+                    "x": 512,
+                    "y": 512
+                },
+                "normalBias": 0,
+                "camera": {
+                    "near": 0.5,
+                    "far": 500,
+                    "left": -5,
+                    "right": 5,
+                    "top": 5,
+                    "bottom": -5
+                }
+            },
+            "target": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            }
+        }
+    ],
     "innerCores": [],
     "modelCores": [],
     "drawCores": [],

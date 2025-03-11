@@ -1,0 +1,176 @@
+<template>
+  <div class="left">
+    <div class="nav-menu">
+      <div class="menu-item" v-for="(item, index) in data" :key="index" @click="setActive(index)">
+        <el-button :class="{ 'active-icon': active == index, 'normal-icon': active != index }" link :icon="item.icon"
+          :title="item.title" />
+        <span :class="{ 'active-text': active == index }">{{ item.title }}</span>
+      </div>
+    </div>
+
+    <div class="content-panel">
+      <div class="build">
+        <div class="back" v-for="i in modelList">
+          <div class="item">
+            <el-link @click="load(i)">
+              {{ getName(i) }}
+            </el-link>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue';
+import { getObjectViews, createGsapAnimation } from './lib'
+
+const data = [
+  // { icon: 'set-up', title: '配置案例' },
+  { icon: 'office-building', title: '建筑' },
+  { icon: 'partly-cloudy', title: '天空盒' },
+];
+const active = ref(localStorage.getItem('active') || 0);
+function setActive(index) {
+  localStorage.setItem('active', index);
+  active.value = index;
+  changePanel()
+}
+
+const getName = (url) => url.split('/').pop()
+const load = (url) => {
+  const { modelCores } = window.threeEditor
+  const { camera, controls, transformControls } = threeEditor
+  const { loaderService } = modelCores.loadModel(url)
+  loaderService.complete = model => {
+    const { maxView, target } = getObjectViews(model)
+    Promise.all([createGsapAnimation(camera.position, maxView), createGsapAnimation(controls.target, target)]).then(() => {
+      controls.target.copy(target)
+      transformControls.attach(model)
+    })
+  }
+}
+let modelList = [
+  'https://z2586300277.github.io/three-editor/dist/files/resource/LittlestTokyo.glb',
+  'https://z2586300277.github.io/three-editor/dist/files/resource/Soldier.glb',
+  'https://z2586300277.github.io/three-editor/dist/files/resource/aroundBuilding.FBX',
+  'https://z2586300277.github.io/three-editor/dist/files/resource/foorGround.glb',
+  'https://z2586300277.github.io/three-editor/dist/files/resource/car.glb',
+  'https://z2586300277.github.io/three-editor/dist/files/resource/tree.glb',
+  'https://z2586300277.github.io/three-editor/dist/files/resource/bird.glb',
+  'https://z2586300277.github.io/three-editor/dist/files/resource/bird2.glb',
+  'https://z2586300277.github.io/three-editor/dist/files/resource/bird3.glb',
+  'https://z2586300277.github.io/three-editor/dist/files/resource/Fox.glb',
+  'https://z2586300277.github.io/three-editor/dist/files/resource/shanghai.FBX',
+  'https://z2586300277.github.io/three-editor/dist/files/resource/datacenter.glb'
+]
+
+changePanel()
+function changePanel() {
+  console.log(active.value)
+}
+</script>
+
+<style lang="less" scoped>
+.left {
+  width: 280px;
+  height: calc(100% - 50px);
+  background-color: #181818;
+  position: fixed;
+  top: 50px;
+  left: 0;
+  z-index: 100;
+  display: flex;
+}
+
+.nav-menu {
+  width: 60px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid #4a4a4a;
+  box-sizing: border-box;
+}
+
+.menu-item {
+  height: 62px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+  cursor: pointer;
+  border-bottom: 1px solid #3e3e3e;
+  user-select: none;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: #252525;
+  }
+
+  .normal-icon {
+    font-size: 24px;
+    transition: all 0.2s;
+  }
+
+  .active-icon {
+    font-size: 28px;
+    color: rgb(182, 211, 244);
+    font-weight: 800;
+    transition: all 0.2s;
+  }
+
+  .active-text {
+    color: rgb(182, 211, 244);
+    font-weight: bold;
+  }
+}
+
+.content-panel {
+  flex: 1;
+  overflow: auto;
+}
+
+.build {
+  padding: 4px;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-rows: repeat(auto-fit, 80px);
+  grid-template-columns: repeat(2, 1fr);
+  overflow: scroll;
+  height: 100%;
+  justify-items: center;
+  width: 100%;
+
+  .back {
+    height: 70px;
+    width: 90px;
+    border-radius: 6px;
+    border: 1px solid #676768;
+    display: flex;
+    padding: 5px;
+    box-sizing: border-box;
+  }
+
+  .item {
+    border: 1px solid #3d3d3d;
+    border-radius: 3px;
+    height: 100%;
+    width: 100%;
+    word-wrap: break-word;
+    word-break: break-all;
+    font-size: 12px;
+    display: flex;
+    overflow-wrap: break-word;
+    text-align: center;
+    justify-content: center;
+    align-content: center;
+    justify-items: center;
+    align-items: center;
+    padding: 4px;
+    box-sizing: border-box;
+  }
+
+}
+</style>

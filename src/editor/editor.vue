@@ -5,9 +5,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted, watch } from 'vue'
 import tamplateJson from './template.json'
-import { ThreeEditor } from '../../../Vite_three-editor/lib/main'
-// import { ThreeEditor } from '../../../Vite_three-editor/dist/index'
-// import { ThreeEditor } from 'three-edit-cores'
+import { ThreeEditor } from './lib'
 
 ThreeEditor.dracoPath = __dracoPath__
 let threeEditor = null
@@ -30,13 +28,13 @@ function init() {
         fps: null,
         pixelRatio: window.devicePixelRatio * 1,
         webglRenderParams: { antialias: true, alpha: true, logarithmicDepthBuffer: true },
-        sceneParams: JSON.parse(localStorage.getItem(dataCores.sceneName))
+        sceneParams: JSON.parse(localStorage.getItem(dataCores.sceneName)) || tamplateJson
 
     })
 
     emits('emitThreeEditor', threeEditor)
 
-    window.addEventListener('resize', () => threeEditor.renderSceneResize())
+    window.addEventListener('resize', () => window.threeEditor?.renderSceneResize?.())
 
 }
 

@@ -55,6 +55,9 @@
     <div class="main-container">
       <!-- 左侧面板 - 可收缩 -->
       <div class="side-panel left-panel" :class="{ 'collapsed': leftCollapsed }">
+        <div style="height: 100%;width: 100%;" v-show="!leftCollapsed">
+          <LeftPanel />
+        </div>
         <div class="panel-toggle" @click="leftCollapsed = !leftCollapsed">
           <el-icon>
             <component :is="leftCollapsed ? 'ArrowRight' : 'ArrowLeft'" />
@@ -156,6 +159,7 @@ import { reactive, ref, watch } from 'vue'
 import Editor from './editor.vue'
 import { ElButton, ElSelect, ElOption, ElMessage, ElIcon } from 'element-plus'
 import { Pointer, Position, RefreshRight, ZoomIn } from '@element-plus/icons-vue'
+import LeftPanel from './left.vue'
 
 const dialogVisible = ref(false);
 const inputSceneName = ref('');
