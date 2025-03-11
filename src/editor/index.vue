@@ -65,13 +65,23 @@
       <!-- 中间区域 -->
       <div class="center-panel">
         <!-- 顶部工具栏 -->
-        <div class="top-toolbar">
-          <!-- <el-radio-group v-model="currentMode" size="small">
-            <el-radio-button label="选中" />
-            <el-radio-button label="平移" />
-            <el-radio-button label="旋转" />
-            <el-radio-button label="缩放" />
-          </el-radio-group> -->
+        <div class="top-toolbar" v-show="!previewScene">
+          <el-checkbox v-model="selectChildMode">子级</el-checkbox>
+          <span class="divider"></span>
+          <el-radio-group v-model="currentMode" size="small">
+            <el-radio-button label="选中" value="选中">
+              <el-icon><Pointer /></el-icon>选择
+            </el-radio-button>
+            <el-radio-button label="平移" value="平移">
+              <el-icon><Position /></el-icon>平移
+            </el-radio-button>
+            <el-radio-button label="旋转" value="旋转">
+              <el-icon><RefreshRight /></el-icon>旋转
+            </el-radio-button>
+            <el-radio-button label="缩放" value="缩放">
+              <el-icon><ZoomIn /></el-icon>缩放
+            </el-radio-button>
+          </el-radio-group>
         </div>
       </div>
 
@@ -92,12 +102,11 @@
             <el-switch inactive-text="预览" v-model="previewScene" active-color="#a8d4fd" />
           </div>
           <div class="switch-item" :class="{ 'disabled': previewScene }">
-            <el-switch inactive-text="右键菜单" v-model="rightClickMenusEnable" active-color="#a8d4fd" 
+            <el-switch inactive-text="右键菜单" v-model="rightClickMenusEnable" active-color="#a8d4fd"
               :disabled="previewScene" />
           </div>
           <div class="switch-item" :class="{ 'disabled': previewScene }">
-            <el-switch inactive-text="快捷键" v-model="openKeyEnable" active-color="#a8d4fd" 
-              :disabled="previewScene" />
+            <el-switch inactive-text="快捷键" v-model="openKeyEnable" active-color="#a8d4fd" :disabled="previewScene" />
           </div>
         </div>
         <div class="shortcuts-guide" :class="{ 'disabled': previewScene }">
@@ -145,24 +154,34 @@
 <script setup>
 import { reactive, ref, watch } from 'vue'
 import Editor from './editor.vue'
-import { ElButton, ElSelect, ElOption, ElMessage } from 'element-plus'
+import { ElButton, ElSelect, ElOption, ElMessage, ElIcon } from 'element-plus'
+import { Pointer, Position, RefreshRight, ZoomIn } from '@element-plus/icons-vue'
 
 const dialogVisible = ref(false);
 const inputSceneName = ref('');
 const currentMode = ref('选中')
-
-// 面板状态
+const selectChildMode = ref(false)
 const previewScene = ref(false)
 const leftCollapsed = ref(false)
 const rightCollapsed = ref(false)
 const rightClickMenusEnable = ref(false)
 const openKeyEnable = ref(false)
 
+watch(selectChildMode, (val) => threeEditor.handler.selectChildEnabled = val)
 watch(rightClickMenusEnable, (val) => threeEditor.handler.rightClickMenusEnable = val)
 watch(openKeyEnable, (val) => threeEditor.handler.openKeyEnable = val)
 watch(previewScene, (val) => {
   leftCollapsed.value = val
   rightCollapsed.value = val
+})
+watch(currentMode, (val) => {
+  if (val === '选中') threeEditor.handler.mode = 'select'
+  else threeEditor.handler.mode = 'transform'
+  
+  const { transformControls } = threeEditor
+  if (val === '平移') transformControls.setMode('translate')
+  else if (val === '旋转') transformControls.setMode('rotate')
+  else if (val === '缩放') transformControls.setMode('scale')
 })
 
 function getEvent(e) {
@@ -173,6 +192,7 @@ const emitThreeEditor = (threeEditor) => {
   window.threeEditor = threeEditor
   openKeyEnable.value = threeEditor.handler.openKeyEnable
   rightClickMenusEnable.value = threeEditor.handler.rightClickMenusEnable
+  selectChildMode.value = threeEditor.handler.selectChildEnabled
 }
 
 // 基础数据
@@ -355,10 +375,50 @@ function saveScene() {
   left: 50%;
   transform: translateX(-50%);
   z-index: 4;
-  background-color: #252525;
-  padding: 6px;
-  border-radius: 4px;
+  padding: 4px 10px;
+  border-radius: 8px;
   border: 1px solid #404040;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  backdrop-filter: blur(5px);
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background-color: rgba(45, 45, 45, 0.95);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  }
+  
+  .divider {
+    width: 1px;
+    height: 24px;
+    background-color: #404040;
+  }
+  
+  :deep(.el-checkbox__label) {
+    color: #e5eaf3;
+    font-size: 12px;
+  }
+  
+  :deep(.el-radio-group) {
+    display: flex;
+  }
+  
+  :deep(.el-radio-button__inner) {
+    display: flex;
+    align-items: center;
+    padding: 6px 10px;
+    font-size: 12px;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      background-color: #4a4a4a;
+    }
+    
+    .el-icon {
+      margin-right: 4px;
+    }
+  }
 }
 
 .btn-add {
