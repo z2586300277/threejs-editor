@@ -36,11 +36,16 @@
             </template>
           </el-dialog>
         </div>
-        <div class="title">Three.js Editor</div>
+        <div class="title">
+          - &nbsp;
+          <img class="logo" src="/site.png" alt="logo" width="18px" height="18px">
+          &nbsp;{{ dataCores.sceneName || ' - - - - ' }}
+          -
+        </div>
         <div class="header-right">
           <el-button class="btn-add" link icon="Document" @click="exportTemplateJson">导出</el-button>
           <el-button @click="pict" icon="camera"></el-button>
-          <el-button @click="() => threeEditor?.openControlPanel()">控制板</el-button>
+          <el-button @click="openPanel">控制板</el-button>
           <el-button @click="saveScene">保存</el-button>
         </div>
       </div>
@@ -99,9 +104,11 @@ const rightCollapsed = ref(false);
 
 // 基础数据
 const dataCores = reactive({
-  sceneName: localStorage.getItem('sceneName') || '',
+  sceneName: localStorage.getItem('sceneName') || '测试场景',
   options: JSON.parse(localStorage.getItem('sceneList')) || [{ name: '测试场景' }]
 })
+
+const openPanel = () => threeEditor.openControlPanel()
 
 function saveLocal() {
   localStorage.setItem('sceneList', JSON.stringify(dataCores.options))
@@ -131,7 +138,7 @@ function exportTemplateJson() {
   const blob = new Blob([JSON.stringify(threeEditor.saveSceneEdit())], { type: 'application/json' })
   const link = document.createElement('a')
   link.href = URL.createObjectURL(blob)
-  link.download = Date.now() + '.json'
+  link.download = (dataCores.sceneName || '场景') + '.json'
   link.click()
 }
 
@@ -139,7 +146,7 @@ function pict() {
   const base64 = threeEditor.getSceneEditorImage(['image/png', '0.8'])
   const link = document.createElement('a');
   link.href = base64;
-  link.download = 'myImage.png';
+  link.download = (dataCores.sceneName || '场景') + '.png';
   link.click();
 }
 
@@ -190,6 +197,9 @@ function saveScene() {
     color: #E5EAF3;
     font-size: 18px;
     text-align: center;
+    display: flex;
+    align-items: center;
+    height: 100%;
   }
 
   &-right {
