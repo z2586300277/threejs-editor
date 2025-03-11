@@ -10,9 +10,10 @@ import { ThreeEditor } from '../../../Vite_three-editor/lib/main'
 // import { ThreeEditor } from 'three-edit-cores'
 
 ThreeEditor.dracoPath = __dracoPath__
-window.threeEditor = null
+let threeEditor = null
 const editor = ref(null)
 const { dataCores } = defineProps(['dataCores'])
+const emits = defineEmits(['emitThreeEditor'])
 
 watch(() => dataCores.sceneName, (val) => {
 
@@ -32,6 +33,8 @@ function init() {
         sceneParams: JSON.parse(localStorage.getItem(dataCores.sceneName))
 
     })
+
+    emits('emitThreeEditor', threeEditor)
 
     window.addEventListener('resize', () => threeEditor.renderSceneResize())
 

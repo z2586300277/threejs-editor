@@ -1,7 +1,7 @@
 <template>
   <div class="layout">
     <!-- 顶部导航栏 -->
-    <div class="header">
+    <div class="header" v-show="!previewScene">
       <div class="header-box">
         <div class="header-left">
           <el-select v-model="dataCores.sceneName" class="m-2" placeholder="场景" size="large" style="width: 200px">
@@ -84,9 +84,35 @@
         </div>
       </div>
     </div>
+
+    <div class="bot">
+      <div class="control-panel">
+        <div class="switches-container">
+          <div class="switch-item">
+            <el-switch inactive-text="预览" v-model="previewScene" active-color="#a8d4fd" />
+          </div>
+          <div class="switch-item" :class="{ 'disabled': previewScene }">
+            <el-switch inactive-text="右键菜单" v-model="rightClickMenusEnable" active-color="#a8d4fd" 
+              :disabled="previewScene" />
+          </div>
+          <div class="switch-item" :class="{ 'disabled': previewScene }">
+            <el-switch inactive-text="快捷键" v-model="openKeyEnable" active-color="#a8d4fd" 
+              :disabled="previewScene" />
+          </div>
+        </div>
+        <div class="shortcuts-guide" :class="{ 'disabled': previewScene }">
+          <div class="shortcuts-title">快捷键指南</div>
+          <div class="shortcuts-content">
+            <div>1:变换  2:选择  Tab:变换<=>选择 </div>
+            <div>变换 [r:旋转 g:平移 t:缩放] [ q w e a s d] 方位微调</div>
+            <div>tab : 切换模式 z:撤销 y: 反撤销 del: 删除 esc: 退出操作</div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <Editor :dataCores="dataCores" class="editor" />
+  <Editor @dblclick="getEvent" :dataCores="dataCores" @emitThreeEditor="emitThreeEditor" class="editor" />
 </template>
 
 <script setup>
@@ -99,8 +125,28 @@ const inputSceneName = ref('');
 const currentMode = ref('选中')
 
 // 面板状态
+const previewScene = ref(false)
 const leftCollapsed = ref(false)
-const rightCollapsed = ref(false);
+const rightCollapsed = ref(false)
+const rightClickMenusEnable = ref(false)
+const openKeyEnable = ref(false)
+
+watch(rightClickMenusEnable, (val) => threeEditor.handler.rightClickMenusEnable = val)
+watch(openKeyEnable, (val) => threeEditor.handler.openKeyEnable = val)
+watch(previewScene, (val) => {
+  leftCollapsed.value = val
+  rightCollapsed.value = val
+})
+
+function getEvent(e) {
+  threeEditor.getSceneEvent(e)
+}
+
+const emitThreeEditor = (threeEditor) => {
+  window.threeEditor = threeEditor
+  openKeyEnable.value = threeEditor.handler.openKeyEnable
+  rightClickMenusEnable.value = threeEditor.handler.rightClickMenusEnable
+}
 
 // 基础数据
 const dataCores = reactive({
@@ -291,5 +337,59 @@ function saveScene() {
 .btn-add {
   margin-left: 15px;
   color: #E5EAF3;
+}
+
+.bot {
+  bottom: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  position: fixed;
+  z-index: 100;
+  pointer-events: none;
+}
+
+.control-panel {
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+  padding: 12px 16px;
+  pointer-events: auto;
+}
+
+.switches-container {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 10px;
+}
+
+.switch-item {
+  transition: opacity 0.3s ease;
+  
+  &.disabled {
+    opacity: 0;
+  }
+}
+
+.shortcuts-guide {
+  transition: opacity 0.3s ease;
+  
+  &.disabled {
+    opacity: 0;
+  }
+}
+
+.shortcuts-title {
+  font-size: 12px;
+  color: #a8d4fd;
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+.shortcuts-content {
+  font-size: 12px;
+  color: #e5eaf3;
+  line-height: 1.6;
 }
 </style>
