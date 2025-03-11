@@ -163,7 +163,7 @@ import LeftPanel from './left.vue'
 
 const dialogVisible = ref(false);
 const inputSceneName = ref('');
-const currentMode = ref('选中')
+const currentMode = ref('平移')
 const selectChildMode = ref(false)
 const previewScene = ref(false)
 const leftCollapsed = ref(false)

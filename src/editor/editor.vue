@@ -7,11 +7,14 @@ import { ref, onMounted, onUnmounted, watch } from 'vue'
 import tamplateJson from './template.json'
 import { ThreeEditor } from './lib'
 
-ThreeEditor.dracoPath = __dracoPath__
+ThreeEditor.dracoPath = __isProduction__ ? '/threejs-editor/draco/' : '/draco/'
 let threeEditor = null
 const editor = ref(null)
 const { dataCores } = defineProps(['dataCores'])
 const emits = defineEmits(['emitThreeEditor'])
+window.GUI_PARAMS = {
+    step: 0.1,
+}
 
 watch(() => dataCores.sceneName, (val) => {
 

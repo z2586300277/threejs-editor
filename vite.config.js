@@ -5,7 +5,7 @@ export default defineConfig({
 
   define: {
 
-    __dracoPath__: process.env.NODE_ENV === 'production' ? '/threejs-editor/draco/' : '/draco/'
+    __isProduction__: process.env.NODE_ENV === 'production'
 
   },
 

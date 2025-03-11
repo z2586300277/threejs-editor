@@ -10,9 +10,9 @@
 
     <div class="content-panel">
       <div class="build">
-        <div class="back" v-for="i in modelList">
+        <div class="back" v-for="i in showList">
           <div class="item">
-            <el-link @click="load(i)">
+            <el-link @click="clickLeft(i)">
               {{ getName(i) }}
             </el-link>
           </div>
@@ -27,9 +27,8 @@ import { ref } from 'vue';
 import { getObjectViews, createGsapAnimation } from './lib'
 
 const data = [
-  // { icon: 'set-up', title: '配置案例' },
-  { icon: 'office-building', title: '建筑' },
-  { icon: 'partly-cloudy', title: '天空盒' },
+  { icon: 'set-up', title: '配置案例' },
+  { icon: 'office-building', title: '模型' },
 ];
 const active = ref(localStorage.getItem('active') || 0);
 function setActive(index) {
@@ -37,13 +36,34 @@ function setActive(index) {
   active.value = index;
   changePanel()
 }
-
 const getName = (url) => url.split('/').pop()
+
+const loadingDiv = document.createElement('div')
+loadingDiv.innerText = '加载中...'
+Object.assign(loadingDiv.style, {
+  pointerEvents: 'none',
+  position: 'fixed',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%,-50%)',
+  color: 'white',
+  fontSize: '20px',
+  backgroundColor: 'rgba(0,0,0,0.5)',
+  padding: '10px 20px',
+  borderRadius: '5px'
+})
 const load = (url) => {
   const { modelCores } = window.threeEditor
   const { camera, controls, transformControls } = threeEditor
   const { loaderService } = modelCores.loadModel(url)
+
+  document.body.appendChild(loadingDiv)
+  loaderService.progress = progress => {
+    loadingDiv.innerText = '下载' + (progress * 100).toFixed(2) + '%'
+  }
+
   loaderService.complete = model => {
+    document.body.removeChild(loadingDiv)
     const { maxView, target } = getObjectViews(model)
     Promise.all([createGsapAnimation(camera.position, maxView), createGsapAnimation(controls.target, target)]).then(() => {
       controls.target.copy(target)
@@ -51,7 +71,20 @@ const load = (url) => {
     })
   }
 }
+
+let editorList = [
+  'editorJson/draw.json',
+  'editorJson/animous.json',
+].map(v => __isProduction__ ? '/threejs-editor/' + v : '/' + v)
 let modelList = [
+  'https://z2586300277.github.io/3d-file-server/models/glb/computer.glb',
+  'https://z2586300277.github.io/3d-file-server/models/glb/daodan.glb',
+  'https://z2586300277.github.io/3d-file-server/models/glb/feiji.glb',
+  'https://z2586300277.github.io/3d-file-server/models/glb/gongren.glb',
+  'https://z2586300277.github.io/3d-file-server/models/glb/leida.glb',
+  'https://z2586300277.github.io/3d-file-server/models/glb/plane.glb',
+  'https://z2586300277.github.io/3d-file-server/models/glb/robot.glb',
+  'https://z2586300277.github.io/3d-file-server/models/glb/wajueji.glb',
   'https://z2586300277.github.io/three-editor/dist/files/resource/LittlestTokyo.glb',
   'https://z2586300277.github.io/three-editor/dist/files/resource/Soldier.glb',
   'https://z2586300277.github.io/three-editor/dist/files/resource/aroundBuilding.FBX',
@@ -66,9 +99,24 @@ let modelList = [
   'https://z2586300277.github.io/three-editor/dist/files/resource/datacenter.glb'
 ]
 
+const showList = ref(editorList)
+const clickLeft = (v) => {
+  if (active.value == 1) load(v)
+  else if (active.value == 0) {
+    fetch(v).then(res => res.json()).then(res => {
+      threeEditor?.resetEditorStorage(res)
+    })
+  }
+
+}
+
 changePanel()
 function changePanel() {
-  console.log(active.value)
+  if (active.value == 0) {
+    showList.value = editorList
+  } else if (active.value == 1) {
+    showList.value = modelList
+  }
 }
 </script>
 
