@@ -90,6 +90,9 @@
 
       <!-- 右侧面板 - 可收缩 -->
       <div class="side-panel right-panel" :class="{ 'collapsed': rightCollapsed }">
+        <div style="height: 100%;width: 100%;" v-show="!rightCollapsed">
+          <RightPanel />
+        </div>
         <div class="panel-toggle" @click="rightCollapsed = !rightCollapsed">
           <el-icon>
             <component :is="rightCollapsed ? 'ArrowLeft' : 'ArrowRight'" />
@@ -160,6 +163,7 @@ import Editor from './editor.vue'
 import { ElButton, ElSelect, ElOption, ElMessage, ElIcon } from 'element-plus'
 import { Pointer, Position, RefreshRight, ZoomIn } from '@element-plus/icons-vue'
 import LeftPanel from './left.vue'
+import RightPanel from './right.vue'
 
 const dialogVisible = ref(false);
 const inputSceneName = ref('');
@@ -387,12 +391,7 @@ function saveScene() {
   gap: 12px;
   backdrop-filter: blur(5px);
   transition: all 0.3s ease;
-  
-  &:hover {
-    background-color: rgba(45, 45, 45, 0.95);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-  }
-  
+  background-color: rgba(45, 45, 45, 0.95);
   .divider {
     width: 1px;
     height: 24px;
