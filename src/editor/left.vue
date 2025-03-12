@@ -49,36 +49,12 @@ const data = [
   {
     icon: 'set-up',
     title: '配置案例',
-    list: [
-      'editorJson/draw.json',
-      'editorJson/animous.json',
-    ].map(v => __isProduction__ ? '/threejs-editor/' + v : '/' + v)
+    list: window.editorJsons.map(v => __isProduction__ ? '/threejs-editor/' + v : '/' + v)
   },
   {
     icon: 'office-building',
     title: '模型',
-    list: [
-      'https://z2586300277.github.io/three-editor/dist/files/resource/datacenter.glb',
-      'https://z2586300277.github.io/3d-file-server/models/glb/computer.glb',
-      'https://z2586300277.github.io/3d-file-server/models/glb/daodan.glb',
-      'https://z2586300277.github.io/3d-file-server/models/glb/feiji.glb',
-      'https://z2586300277.github.io/3d-file-server/models/glb/gongren.glb',
-      'https://z2586300277.github.io/3d-file-server/models/glb/leida.glb',
-      'https://z2586300277.github.io/3d-file-server/models/glb/plane.glb',
-      'https://z2586300277.github.io/3d-file-server/models/glb/robot.glb',
-      'https://z2586300277.github.io/3d-file-server/models/glb/wajueji.glb',
-      'https://z2586300277.github.io/three-editor/dist/files/resource/LittlestTokyo.glb',
-      'https://z2586300277.github.io/three-editor/dist/files/resource/Soldier.glb',
-      'https://z2586300277.github.io/three-editor/dist/files/resource/aroundBuilding.FBX',
-      'https://z2586300277.github.io/three-editor/dist/files/resource/foorGround.glb',
-      'https://z2586300277.github.io/three-editor/dist/files/resource/car.glb',
-      'https://z2586300277.github.io/three-editor/dist/files/resource/tree.glb',
-      'https://z2586300277.github.io/three-editor/dist/files/resource/bird.glb',
-      'https://z2586300277.github.io/three-editor/dist/files/resource/bird2.glb',
-      'https://z2586300277.github.io/three-editor/dist/files/resource/bird3.glb',
-      'https://z2586300277.github.io/three-editor/dist/files/resource/Fox.glb',
-      'https://z2586300277.github.io/three-editor/dist/files/resource/shanghai.FBX',
-    ],
+    list: window.models,
   },
   {
     title: '组件',
@@ -107,7 +83,6 @@ const loadModel = (url) => {
     document.body.removeChild(loadingDiv)
     const { maxView, target } = getObjectViews(model)
     Promise.all([createGsapAnimation(camera.position, maxView), createGsapAnimation(controls.target, target)]).then(() => {
-      controls.target.copy(target)
       transformControls.attach(model)
     })
   }
@@ -124,9 +99,13 @@ async function clickLeft(v) {
     mesh.isDesignMesh = true
     mesh.designType = design.name
     scene.add(mesh)
+    const { maxView, target } = getObjectViews(mesh)
+    createGsapAnimation(threeEditor.camera.position, maxView)
+    createGsapAnimation(threeEditor.controls.target, target)
     transformControls.attach(mesh)
   }
 }
+
 </script>
 
 <style lang="less" scoped>
