@@ -1,10 +1,10 @@
 <template>
   <div class="left">
     <div class="nav-menu">
-      <div class="menu-item" v-for="(item, index) in data" :key="index" @click="setActive(index)">
-        <el-button :class="{ 'active-icon': active == index, 'normal-icon': active != index }" link :icon="item.icon"
-          :title="item.title" />
-        <span :class="{ 'active-text': active == index }">{{ item.title }}</span>
+      <div class="menu-item" v-for="item in data" :key="item.title" @click="setActive(item)">
+        <el-button :class="{ 'active-icon': active == item.title, 'normal-icon': active != item.title }" link
+          :icon="item.icon" :title="item.title" />
+        <span :class="{ 'active-text': active == item.title }">{{ item.title }}</span>
       </div>
     </div>
 
@@ -13,7 +13,7 @@
         <div class="back" v-for="i in showList">
           <div class="item">
             <el-link @click="clickLeft(i)">
-              {{ getName(i) }}
+              {{ i.split('/').pop() }}
             </el-link>
           </div>
         </div>
@@ -26,20 +26,7 @@
 import { ref } from 'vue';
 import { getObjectViews, createGsapAnimation } from './lib'
 
-const data = [
-  { icon: 'set-up', title: '配置案例' },
-  { icon: 'office-building', title: '模型' },
-];
-const active = ref(localStorage.getItem('active') || 0);
-function setActive(index) {
-  localStorage.setItem('active', index);
-  active.value = index;
-  changePanel()
-}
-const getName = (url) => url.split('/').pop()
-
 const loadingDiv = document.createElement('div')
-loadingDiv.innerText = '加载中...'
 Object.assign(loadingDiv.style, {
   pointerEvents: 'none',
   position: 'fixed',
@@ -52,16 +39,60 @@ Object.assign(loadingDiv.style, {
   padding: '10px 20px',
   borderRadius: '5px'
 })
-const load = (url) => {
+
+const data = [
+  {
+    icon: 'set-up',
+    title: '配置案例',
+    list: [
+      'editorJson/draw.json',
+      'editorJson/animous.json',
+    ].map(v => __isProduction__ ? '/threejs-editor/' + v : '/' + v)
+  },
+  {
+    icon: 'office-building',
+    title: '模型',
+    list: [
+      'https://z2586300277.github.io/three-editor/dist/files/resource/datacenter.glb',
+      'https://z2586300277.github.io/3d-file-server/models/glb/computer.glb',
+      'https://z2586300277.github.io/3d-file-server/models/glb/daodan.glb',
+      'https://z2586300277.github.io/3d-file-server/models/glb/feiji.glb',
+      'https://z2586300277.github.io/3d-file-server/models/glb/gongren.glb',
+      'https://z2586300277.github.io/3d-file-server/models/glb/leida.glb',
+      'https://z2586300277.github.io/3d-file-server/models/glb/plane.glb',
+      'https://z2586300277.github.io/3d-file-server/models/glb/robot.glb',
+      'https://z2586300277.github.io/3d-file-server/models/glb/wajueji.glb',
+      'https://z2586300277.github.io/three-editor/dist/files/resource/LittlestTokyo.glb',
+      'https://z2586300277.github.io/three-editor/dist/files/resource/Soldier.glb',
+      'https://z2586300277.github.io/three-editor/dist/files/resource/aroundBuilding.FBX',
+      'https://z2586300277.github.io/three-editor/dist/files/resource/foorGround.glb',
+      'https://z2586300277.github.io/three-editor/dist/files/resource/car.glb',
+      'https://z2586300277.github.io/three-editor/dist/files/resource/tree.glb',
+      'https://z2586300277.github.io/three-editor/dist/files/resource/bird.glb',
+      'https://z2586300277.github.io/three-editor/dist/files/resource/bird2.glb',
+      'https://z2586300277.github.io/three-editor/dist/files/resource/bird3.glb',
+      'https://z2586300277.github.io/three-editor/dist/files/resource/Fox.glb',
+      'https://z2586300277.github.io/three-editor/dist/files/resource/shanghai.FBX',
+    ]
+  },
+];
+
+const activeLocal = localStorage.getItem('active') 
+const showList = ref(data.find(v => v.title === activeLocal)?.list || data[0].list);
+const active = ref(activeLocal || data[0].title);
+function setActive(item) {
+  localStorage.setItem('active', item.title);
+  active.value = item.title;
+  showList.value = item.list;
+}
+
+const loadScene = (v) => fetch(v).then(res => res.json()).then(res => threeEditor?.resetEditorStorage(res))
+const loadModel = (url) => {
   const { modelCores } = window.threeEditor
   const { camera, controls, transformControls } = threeEditor
   const { loaderService } = modelCores.loadModel(url)
-
   document.body.appendChild(loadingDiv)
-  loaderService.progress = progress => {
-    loadingDiv.innerText = '下载' + (progress * 100).toFixed(2) + '%'
-  }
-
+  loaderService.progress = progress => loadingDiv.innerText = '下载' + (progress * 100).toFixed(2) + '%'
   loaderService.complete = model => {
     document.body.removeChild(loadingDiv)
     const { maxView, target } = getObjectViews(model)
@@ -72,51 +103,9 @@ const load = (url) => {
   }
 }
 
-let editorList = [
-  'editorJson/draw.json',
-  'editorJson/animous.json',
-].map(v => __isProduction__ ? '/threejs-editor/' + v : '/' + v)
-let modelList = [
-  'https://z2586300277.github.io/3d-file-server/models/glb/computer.glb',
-  'https://z2586300277.github.io/3d-file-server/models/glb/daodan.glb',
-  'https://z2586300277.github.io/3d-file-server/models/glb/feiji.glb',
-  'https://z2586300277.github.io/3d-file-server/models/glb/gongren.glb',
-  'https://z2586300277.github.io/3d-file-server/models/glb/leida.glb',
-  'https://z2586300277.github.io/3d-file-server/models/glb/plane.glb',
-  'https://z2586300277.github.io/3d-file-server/models/glb/robot.glb',
-  'https://z2586300277.github.io/3d-file-server/models/glb/wajueji.glb',
-  'https://z2586300277.github.io/three-editor/dist/files/resource/LittlestTokyo.glb',
-  'https://z2586300277.github.io/three-editor/dist/files/resource/Soldier.glb',
-  'https://z2586300277.github.io/three-editor/dist/files/resource/aroundBuilding.FBX',
-  'https://z2586300277.github.io/three-editor/dist/files/resource/foorGround.glb',
-  'https://z2586300277.github.io/three-editor/dist/files/resource/car.glb',
-  'https://z2586300277.github.io/three-editor/dist/files/resource/tree.glb',
-  'https://z2586300277.github.io/three-editor/dist/files/resource/bird.glb',
-  'https://z2586300277.github.io/three-editor/dist/files/resource/bird2.glb',
-  'https://z2586300277.github.io/three-editor/dist/files/resource/bird3.glb',
-  'https://z2586300277.github.io/three-editor/dist/files/resource/Fox.glb',
-  'https://z2586300277.github.io/three-editor/dist/files/resource/shanghai.FBX',
-  'https://z2586300277.github.io/three-editor/dist/files/resource/datacenter.glb'
-]
-
-const showList = ref(editorList)
-const clickLeft = (v) => {
-  if (active.value == 1) load(v)
-  else if (active.value == 0) {
-    fetch(v).then(res => res.json()).then(res => {
-      threeEditor?.resetEditorStorage(res)
-    })
-  }
-
-}
-
-changePanel()
-function changePanel() {
-  if (active.value == 0) {
-    showList.value = editorList
-  } else if (active.value == 1) {
-    showList.value = modelList
-  }
+function clickLeft(v) {
+  if(active.value === '配置案例')  loadScene(v)
+  else if(active.value === '模型') loadModel(v)
 }
 </script>
 

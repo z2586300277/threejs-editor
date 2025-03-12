@@ -73,16 +73,24 @@
           <span class="divider"></span>
           <el-radio-group v-model="currentMode" size="small">
             <el-radio-button label="选中" value="选中">
-              <el-icon><Pointer /></el-icon>选择
+              <el-icon>
+                <Pointer />
+              </el-icon>选择
             </el-radio-button>
             <el-radio-button label="平移" value="平移">
-              <el-icon><Position /></el-icon>平移
+              <el-icon>
+                <Position />
+              </el-icon>平移
             </el-radio-button>
             <el-radio-button label="旋转" value="旋转">
-              <el-icon><RefreshRight /></el-icon>旋转
+              <el-icon>
+                <RefreshRight />
+              </el-icon>旋转
             </el-radio-button>
             <el-radio-button label="缩放" value="缩放">
-              <el-icon><ZoomIn /></el-icon>缩放
+              <el-icon>
+                <ZoomIn />
+              </el-icon>缩放
             </el-radio-button>
           </el-radio-group>
         </div>
@@ -174,6 +182,10 @@ const leftCollapsed = ref(false)
 const rightCollapsed = ref(false)
 const rightClickMenusEnable = ref(false)
 const openKeyEnable = ref(false)
+const dataCores = reactive({
+  sceneName: localStorage.getItem('sceneName') || '测试场景',
+  options: JSON.parse(localStorage.getItem('sceneList')) || [{ name: '测试场景' }]
+})
 
 watch(selectChildMode, (val) => threeEditor.handler.selectChildEnabled = val)
 watch(rightClickMenusEnable, (val) => threeEditor.handler.rightClickMenusEnable = val)
@@ -183,18 +195,16 @@ watch(previewScene, (val) => {
   rightCollapsed.value = val
 })
 watch(currentMode, (val) => {
+  const { transformControls } = threeEditor
   if (val === '选中') threeEditor.handler.mode = 'select'
   else threeEditor.handler.mode = 'transform'
-  
-  const { transformControls } = threeEditor
   if (val === '平移') transformControls.setMode('translate')
   else if (val === '旋转') transformControls.setMode('rotate')
   else if (val === '缩放') transformControls.setMode('scale')
 })
 
-function getEvent(e) {
-  threeEditor.getSceneEvent(e)
-}
+const getEvent = (e) => threeEditor.getSceneEvent(e)
+const openPanel = () => threeEditor.openControlPanel()
 
 const emitThreeEditor = (threeEditor) => {
   window.threeEditor = threeEditor
@@ -202,14 +212,6 @@ const emitThreeEditor = (threeEditor) => {
   rightClickMenusEnable.value = threeEditor.handler.rightClickMenusEnable
   selectChildMode.value = threeEditor.handler.selectChildEnabled
 }
-
-// 基础数据
-const dataCores = reactive({
-  sceneName: localStorage.getItem('sceneName') || '测试场景',
-  options: JSON.parse(localStorage.getItem('sceneList')) || [{ name: '测试场景' }]
-})
-
-const openPanel = () => threeEditor.openControlPanel()
 
 function saveLocal() {
   localStorage.setItem('sceneList', JSON.stringify(dataCores.options))
@@ -392,32 +394,33 @@ function saveScene() {
   backdrop-filter: blur(5px);
   transition: all 0.3s ease;
   background-color: rgba(45, 45, 45, 0.95);
+
   .divider {
     width: 1px;
     height: 24px;
     background-color: #404040;
   }
-  
+
   :deep(.el-checkbox__label) {
     color: #e5eaf3;
     font-size: 12px;
   }
-  
+
   :deep(.el-radio-group) {
     display: flex;
   }
-  
+
   :deep(.el-radio-button__inner) {
     display: flex;
     align-items: center;
     padding: 6px 10px;
     font-size: 12px;
     transition: all 0.2s ease;
-    
+
     &:hover {
       background-color: #4a4a4a;
     }
-    
+
     .el-icon {
       margin-right: 4px;
     }
@@ -457,6 +460,7 @@ function saveScene() {
 .switch-item {
   transition: opacity 0.3s ease;
   pointer-events: auto;
+
   &.disabled {
     opacity: 0;
   }
@@ -466,7 +470,7 @@ function saveScene() {
   transition: opacity 0.3s ease;
   border-radius: 6px;
   padding: 8px;
-  
+
   &.disabled {
     opacity: 0;
   }
@@ -500,7 +504,7 @@ function saveScene() {
   margin-bottom: 3px;
   align-items: center;
   text-align: center;
-  
+
   .key {
     background-color: rgba(255, 255, 255, 0.1);
     border-radius: 3px;
@@ -512,7 +516,7 @@ function saveScene() {
     min-width: 40px;
     font-size: 11px;
   }
-  
+
   .desc {
     color: #cccccc;
   }

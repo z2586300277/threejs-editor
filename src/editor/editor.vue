@@ -8,13 +8,15 @@ import tamplateJson from './template.json'
 import { ThreeEditor } from './lib'
 
 ThreeEditor.dracoPath = __isProduction__ ? '/threejs-editor/draco/' : '/draco/'
+
 let threeEditor = null
 const editor = ref(null)
-const { dataCores } = defineProps(['dataCores'])
-const emits = defineEmits(['emitThreeEditor'])
 window.GUI_PARAMS = {
     step: 0.1,
 }
+
+const { dataCores } = defineProps(['dataCores'])
+const emits = defineEmits(['emitThreeEditor'])
 
 watch(() => dataCores.sceneName, (val) => {
 
@@ -27,22 +29,18 @@ watch(() => dataCores.sceneName, (val) => {
 function init() {
 
     threeEditor = new ThreeEditor(editor.value, {
-
         fps: null,
         pixelRatio: window.devicePixelRatio * 1,
         webglRenderParams: { antialias: true, alpha: true, logarithmicDepthBuffer: true },
         sceneParams: JSON.parse(localStorage.getItem(dataCores.sceneName)) || tamplateJson
-
     })
 
     emits('emitThreeEditor', threeEditor)
-
     window.addEventListener('resize', () => window.threeEditor?.renderSceneResize?.())
 
 }
 
-onMounted(() =>  init())
-
+onMounted(() => init())
 onUnmounted(() => threeEditor?.destroySceneRender());
 
 </script>
