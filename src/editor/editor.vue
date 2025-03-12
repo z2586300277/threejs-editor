@@ -22,18 +22,29 @@ watch(() => dataCores.sceneName, (val) => {
 
     let params = localStorage.getItem(val)
     params = JSON.parse(params) || tamplateJson
-    threeEditor?.resetEditorStorage(params)
+    
+    try {
+        threeEditor.resetEditorStorage(params)
+    } catch (error) {
+        localStorage.removeItem(val)
+    }
 
 })
 
 function init() {
 
-    threeEditor = new ThreeEditor(editor.value, {
-        fps: null,
-        pixelRatio: window.devicePixelRatio * 1,
-        webglRenderParams: { antialias: true, alpha: true, logarithmicDepthBuffer: true },
-        sceneParams: JSON.parse(localStorage.getItem(dataCores.sceneName)) || tamplateJson
-    })
+    try {
+        threeEditor = new ThreeEditor(editor.value, {
+            fps: null,
+            pixelRatio: window.devicePixelRatio * 1,
+            webglRenderParams: { antialias: true, alpha: true, logarithmicDepthBuffer: true },
+            sceneParams: JSON.parse(localStorage.getItem(dataCores.sceneName)) || tamplateJson
+        })
+    } catch (error) {
+        localStorage.removeItem(dataCores.sceneName)
+    }
+
+
 
     emits('emitThreeEditor', threeEditor)
     window.addEventListener('resize', () => window.threeEditor?.renderSceneResize?.())
