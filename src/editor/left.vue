@@ -63,11 +63,11 @@ const data = [
   }
 ];
 
-const activeLocal = localStorage.getItem('active')
+const activeLocal = localStorage.getItem('new_active')
 const showList = ref(data.find(v => v.title === activeLocal)?.list || data[0].list);
 const active = ref(activeLocal || data[0].title);
 function setActive(item) {
-  localStorage.setItem('active', item.title);
+  localStorage.setItem('new_active', item.title);
   active.value = item.title;
   showList.value = item.list;
 }

@@ -183,8 +183,8 @@ const rightCollapsed = ref(false)
 const rightClickMenusEnable = ref(false)
 const openKeyEnable = ref(false)
 const dataCores = reactive({
-  sceneName: localStorage.getItem('sceneName') || '测试场景',
-  options: JSON.parse(localStorage.getItem('sceneList')) || [{ name: '测试场景' }]
+  sceneName: localStorage.getItem('new_sceneName') || '三维测试',
+  options: JSON.parse(localStorage.getItem('new_sceneList')) || [{ name: '三维测试' }]
 })
 
 watch(selectChildMode, (val) => threeEditor.handler.selectChildEnabled = val)
@@ -214,8 +214,8 @@ const emitThreeEditor = (threeEditor) => {
 }
 
 function saveLocal() {
-  localStorage.setItem('sceneList', JSON.stringify(dataCores.options))
-  localStorage.setItem('sceneName', dataCores.sceneName)
+  localStorage.setItem('new_sceneList', JSON.stringify(dataCores.options))
+  localStorage.setItem('new_sceneName', dataCores.sceneName)
 }
 
 function createEditor() {
