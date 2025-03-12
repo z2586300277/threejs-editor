@@ -24,7 +24,12 @@
 
 <script setup>
 import { ref } from 'vue';
-import { getObjectViews, createGsapAnimation } from './lib'
+import { ThreeEditor, getObjectViews, createGsapAnimation } from './lib'
+
+// 导入外置组件
+ThreeEditor.__DESIGNS__.push(...Object.values(import.meta.glob('./compoents/\*.js', { eager: true, import: 'default' }))) 
+
+const editor_components = ThreeEditor.__DESIGNS__.map(v => v.label)
 
 const loadingDiv = document.createElement('div')
 Object.assign(loadingDiv.style, {
@@ -73,11 +78,16 @@ const data = [
       'https://z2586300277.github.io/three-editor/dist/files/resource/bird3.glb',
       'https://z2586300277.github.io/three-editor/dist/files/resource/Fox.glb',
       'https://z2586300277.github.io/three-editor/dist/files/resource/shanghai.FBX',
-    ]
+    ],
   },
+  {
+    title: '组件',
+    icon: 'connection',
+    list: editor_components
+  }
 ];
 
-const activeLocal = localStorage.getItem('active') 
+const activeLocal = localStorage.getItem('active')
 const showList = ref(data.find(v => v.title === activeLocal)?.list || data[0].list);
 const active = ref(activeLocal || data[0].title);
 function setActive(item) {
@@ -103,9 +113,19 @@ const loadModel = (url) => {
   }
 }
 
-function clickLeft(v) {
-  if(active.value === '配置案例')  loadScene(v)
-  else if(active.value === '模型') loadModel(v)
+async function clickLeft(v) {
+  if (active.value === '配置案例') loadScene(v)
+  else if (active.value === '模型') loadModel(v)
+  else if (active.value === '组件') {
+    const { scene, transformControls } = threeEditor
+    const design = ThreeEditor.__DESIGNS__.find(d => d.label === v)
+    const mesh = await design.create(null, threeEditor, threeEditor)
+    if (!mesh) return
+    mesh.isDesignMesh = true
+    mesh.designType = design.name
+    scene.add(mesh)
+    transformControls.attach(mesh)
+  }
 }
 </script>
 
@@ -205,8 +225,7 @@ function clickLeft(v) {
     align-content: center;
     justify-items: center;
     align-items: center;
-    padding: 4px;
-    box-sizing: border-box;
+    padding: 4px;  box-sizing: border-box;
   }
 
 }

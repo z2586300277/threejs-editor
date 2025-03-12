@@ -161,8 +161,8 @@
     },
     "handler": {
         "mode": "transform",
-        "openKeyEnable": false,
-        "rightClickMenusEnable": false,
+        "openKeyEnable": true,
+        "rightClickMenusEnable": true,
         "selectChildEnabled": false,
         "selectChildLevel": 1,
         "stats": {
