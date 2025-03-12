@@ -1,4 +1,9 @@
 window.editorJsons = [
+    'editorJson/草原追逐.json',
+    'editorJson/车展.json',
+    'editorJson/机房.json',
+    'editorJson/胜利的导弹.json',
+    'editorJson/数字飞机.json',
     'editorJson/draw.json',
     'editorJson/animous.json',
 ]
