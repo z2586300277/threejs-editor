@@ -1,4 +1,5 @@
 window.editorJsons = [
+    'editorJson/地图.json',
     'editorJson/草原追逐.json',
     'editorJson/车展.json',
     'editorJson/机房.json',
@@ -6,6 +7,10 @@ window.editorJsons = [
     'editorJson/数字飞机.json',
     'editorJson/draw.json',
     'editorJson/animous.json',
+    'editorJson/几何体.json',
+    'editorJson/关爱地球.json',
+    'editorJson/复制物体.json',
+    'editorJson/城市效果.json',
 ]
 
 window.models = [
