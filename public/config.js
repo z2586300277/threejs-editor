@@ -35,3 +35,99 @@ window.models = [
     'https://z2586300277.github.io/three-editor/dist/files/resource/Fox.glb',
     'https://z2586300277.github.io/three-editor/dist/files/resource/shanghai.FBX',
 ]
+
+// 页脚链接配置
+window.footerLinks = {
+    left: [
+     
+    ],
+    right: [
+        { text: "🍃组件案例", url: "https://z2586300277.github.io/three-cesium-examples" },
+        
+        { text: "🍁文档主页", url: "https://z2586300277.github.io/three-editor/docs/dist/" }
+    ]
+};
+
+// 版权信息
+window.copyright = "©2025 2586300277@qq.com All Rights Reserved.";
+
+// 创建dom - 精简版
+document.addEventListener('DOMContentLoaded', function () {
+    // 创建容器
+    const leftFooter = document.createElement('div');
+    leftFooter.className = 'footer-links left-footer';
+
+    const rightFooter = document.createElement('div');
+    rightFooter.className = 'footer-links right-footer';
+
+    const copyright = document.createElement('div');
+    copyright.className = 'copyright';
+    copyright.textContent = window.copyright;
+
+    // 生成链接
+    if (window.footerLinks.left) {
+        window.footerLinks.left.forEach(link => {
+            const a = document.createElement('a');
+            a.href = link.url;
+            a.target = '_blank';
+            a.textContent = link.text;
+            leftFooter.appendChild(a);
+        });
+    }
+
+    if (window.footerLinks.right) {
+        window.footerLinks.right.forEach(link => {
+            const a = document.createElement('a');
+            a.href = link.url;
+            a.target = '_blank';
+            a.textContent = link.text;
+            rightFooter.appendChild(a);
+        });
+    }
+
+    // 添加到页面
+    document.body.appendChild(leftFooter);
+    document.body.appendChild(rightFooter);
+    document.body.appendChild(copyright);
+
+    // 添加样式
+    const style = document.createElement('style');
+    style.textContent = `
+        .footer-links {
+            position: fixed;
+            bottom: 20px;
+            z-index: 1000;
+            display: flex;
+            gap: 12px;
+        }
+        
+        .left-footer { left: 20px; }
+        .right-footer { right: 20px; }
+        
+        .footer-links a {
+            color: #a8d4fd;
+            text-decoration: none;
+            font-size: 14px;
+            opacity: 0.8;
+            transition: all 0.3s;
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+        
+        .footer-links a:hover {
+            opacity: 1;
+            transform: translateY(-2px);
+        }
+        
+        .copyright {
+            position: fixed;
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #888;
+            font-size: 12px;
+            z-index: 1000;
+        }
+    `;
+    document.head.appendChild(style);
+});
