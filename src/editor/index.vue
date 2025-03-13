@@ -256,7 +256,7 @@ function pict() {
 }
 
 function saveScene() {
-  if (dataCores.options.find(item => item.name === dataCores.sceneName)) localStorage.setItem(dataCores.sceneName, JSON.stringify(threeEditor.saveSceneEdit()))
+  if (dataCores.options.find(item => item.name === dataCores.sceneName)) localStorage.setItem(dataCores.sceneName+'-newEditor', JSON.stringify(threeEditor.saveSceneEdit()))
   else dataCores.sceneName = ''
   ElMessage.success('保存成功')
   saveLocal()

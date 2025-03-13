@@ -20,7 +20,7 @@ const emits = defineEmits(['emitThreeEditor'])
 
 watch(() => dataCores.sceneName, (val) => {
 
-    let params = localStorage.getItem(val)
+    let params = localStorage.getItem(val + '-newEditor')
     params = JSON.parse(params) || tamplateJson
     
     try {
@@ -38,7 +38,7 @@ function init() {
             fps: null,
             pixelRatio: window.devicePixelRatio * 1,
             webglRenderParams: { antialias: true, alpha: true, logarithmicDepthBuffer: true },
-            sceneParams: JSON.parse(localStorage.getItem(dataCores.sceneName)) || tamplateJson
+            sceneParams: JSON.parse(localStorage.getItem(dataCores.sceneName + '-newEditor')) || tamplateJson
         })
     } catch (error) {
         localStorage.removeItem(dataCores.sceneName)
