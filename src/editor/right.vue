@@ -18,10 +18,37 @@
             </div>
         </div>
     </div>
+
+    <!-- 简化后的辅助工具控制面板 -->
+    <div class="helper-controls">
+        <div class="control-group">
+            <div class="group-header">
+                <span class="group-title">辅助工具</span>
+                <div class="divider"></div>
+            </div>
+            
+            <div class="control-options">
+                <el-checkbox v-model="showGrid" @change="toggleGrid">
+                    <div class="option-label">
+                        <el-icon><Grid /></el-icon>
+                        <span>显示网格</span>
+                    </div>
+                </el-checkbox>
+                
+                <el-checkbox v-model="showAxes" @change="toggleAxes">
+                    <div class="option-label">
+                        <el-icon><ScaleToOriginal /></el-icon>
+                        <span>显示坐标轴</span>
+                    </div>
+                </el-checkbox>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script setup>
 import { computed, reactive, ref } from 'vue'
+import { Grid, ScaleToOriginal } from '@element-plus/icons-vue'
 
 const selectedSet = ref('蓝天')
 const datalist = reactive([
@@ -50,6 +77,27 @@ const setEnv = (v) => {
     threeEditor.scene.setEnvBackground(Array.from({ length: 6 }, (_, i) => `${set.url || ''}${i + 1}.png`))
     threeEditor.scene.environmentEnabled = true
 };
+
+// 网格和坐标轴控制
+const showGrid = ref(true)
+const showAxes = ref(true)
+
+// 处理网格显示/隐藏
+const toggleGrid = (val) => {
+    threeEditor.handler.helpers.grid.showGrid = val
+}
+
+// 处理坐标轴显示/隐藏
+const toggleAxes = (val) => {
+    threeEditor.handler.helpers.axes.showAxes = val
+}
+
+defineExpose({
+    helperConf(tr){
+        showGrid.value = tr.handler.helpers.grid.showGrid
+        showAxes.value = tr.handler.helpers.axes.showAxes
+    }
+});
 </script>
 
 <style lang="less" scoped>
@@ -93,5 +141,63 @@ const setEnv = (v) => {
 .img {
     width: 50px;
     height: 50px;
+}
+
+/* 辅助工具控制面板样式 */
+.helper-controls {
+    margin-top: 10px;
+    width: 100%;
+    padding: 0 10px;
+    box-sizing: border-box;
+}
+
+.control-group {
+    background-color: rgba(30, 30, 30, 0.6);
+    border-radius: 8px;
+    padding: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.group-header {
+    margin-bottom: 12px;
+    display: flex;
+    flex-direction: column;
+}
+
+.group-title {
+    font-size: 15px;
+    font-weight: 500;
+    color: #a8d4fd;
+    margin-bottom: 8px;
+}
+
+.divider {
+    height: 1px;
+    background: linear-gradient(90deg, rgba(168, 212, 253, 0.3), transparent);
+    width: 100%;
+}
+
+.control-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.option-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.option-label .el-icon {
+    color: #a8d4fd;
+}
+
+/* Element Plus样式覆盖 */
+:deep(.el-checkbox) {
+    .el-checkbox__label {
+        color: #e5eaf3;
+        font-size: 14px;
+    }
 }
 </style>

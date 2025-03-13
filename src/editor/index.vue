@@ -99,7 +99,7 @@
       <!-- 右侧面板 - 可收缩 -->
       <div class="side-panel right-panel" :class="{ 'collapsed': rightCollapsed }">
         <div style="height: 100%;width: 100%;" v-show="!rightCollapsed">
-          <RightPanel />
+          <RightPanel ref="rightPanel" />
         </div>
         <div class="panel-toggle" @click="rightCollapsed = !rightCollapsed">
           <el-icon>
@@ -173,6 +173,7 @@ import { Pointer, Position, RefreshRight, ZoomIn } from '@element-plus/icons-vue
 import LeftPanel from './left.vue'
 import RightPanel from './right.vue'
 
+const rightPanel = ref(null)
 const dialogVisible = ref(false);
 const inputSceneName = ref('');
 const currentMode = ref('平移')
@@ -207,6 +208,7 @@ const getEvent = (e) => threeEditor.getSceneEvent(e)
 const openPanel = () => threeEditor.openControlPanel()
 
 const emitThreeEditor = (threeEditor) => {
+  rightPanel.value.helperConf(threeEditor)
   window.threeEditor = threeEditor
   openKeyEnable.value = threeEditor.handler.openKeyEnable
   rightClickMenusEnable.value = threeEditor.handler.rightClickMenusEnable
