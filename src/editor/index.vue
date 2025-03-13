@@ -22,8 +22,6 @@
             </el-option>
           </el-select>
           <el-button class="btn-add" link icon="plus" @click="dialogVisible = true">新建场景</el-button>
-          <!-- <el-upload class="upload" ref="myUpload" :auto-upload="false" action="" :on-change="uploadChange">
-            <el-button class="btn-add" link icon="plus">模型导入此场景</el-button></el-upload> -->
           <el-dialog v-model="dialogVisible" title="命名场景" width="500">
             <el-input v-model="inputSceneName" placeholder="请输入场景名称" />
             <template #footer>
@@ -37,10 +35,11 @@
           </el-dialog>
         </div>
         <div class="title">
+          <el-link style="font-size: 17px;" @click="openUrl('https://z2586300277.github.io/')">🏠主页</el-link>&nbsp;&nbsp;
           - &nbsp;
           <img class="logo" src="/site.png" alt="logo" width="18px" height="18px">
-          &nbsp;{{ dataCores.sceneName || ' - - - - ' }}
-          -
+          &nbsp;{{ dataCores.sceneName || ' - - - - ' }}&nbsp;-&nbsp;&nbsp;
+          <el-link @click="openUrl('https://z2586300277.github.io/three-editor/dist/#/editor')" style="font-size: 17px;">🍁旧编辑器</el-link>
         </div>
         <div class="header-right">
           <el-button class="btn-add" link icon="Document" @click="exportTemplateJson">导出</el-button>
@@ -188,6 +187,8 @@ const dataCores = reactive({
   options: JSON.parse(localStorage.getItem('new_sceneList')) || [{ name: '三维测试' }]
 })
 
+const openUrl = (url) => window.open(url, '_blank')
+
 watch(selectChildMode, (val) => threeEditor.handler.selectChildEnabled = val)
 watch(rightClickMenusEnable, (val) => threeEditor.handler.rightClickMenusEnable = val)
 watch(openKeyEnable, (val) => threeEditor.handler.openKeyEnable = val)
@@ -256,7 +257,7 @@ function pict() {
 }
 
 function saveScene() {
-  if (dataCores.options.find(item => item.name === dataCores.sceneName)) localStorage.setItem(dataCores.sceneName+'-newEditor', JSON.stringify(threeEditor.saveSceneEdit()))
+  if (dataCores.options.find(item => item.name === dataCores.sceneName)) localStorage.setItem(dataCores.sceneName + '-newEditor', JSON.stringify(threeEditor.saveSceneEdit()))
   else dataCores.sceneName = ''
   ElMessage.success('保存成功')
   saveLocal()
@@ -519,8 +520,7 @@ function saveScene() {
     font-size: 11px;
   }
 
-  .desc {
-    color: #cccccc;
+  .desc {   color: #cccccc;
   }
 }
 </style>
