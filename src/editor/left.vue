@@ -27,7 +27,7 @@ import { ref } from 'vue';
 import { ThreeEditor, getObjectViews, createGsapAnimation } from './lib'
 
 // 导入外置组件
-ThreeEditor.__DESIGNS__.push(...Object.values(import.meta.glob('./compoents/\*.js', { eager: true, import: 'default' }))) 
+ThreeEditor.__DESIGNS__.unshift(...Object.values(import.meta.glob('./compoents/\*.js', { eager: true, import: 'default' }))) 
 
 const editor_components = ThreeEditor.__DESIGNS__.map(v => v.label)
 
@@ -100,8 +100,11 @@ async function clickLeft(v) {
     mesh.designType = design.name
     scene.add(mesh)
     const { maxView, target } = getObjectViews(mesh)
-    createGsapAnimation(threeEditor.camera.position, maxView)
-    createGsapAnimation(threeEditor.controls.target, target)
+    //检测是否存在maxView
+    if(maxView.x){
+      createGsapAnimation(threeEditor.camera.position, maxView)
+      createGsapAnimation(threeEditor.controls.target, target)
+    }
     transformControls.attach(mesh)
   }
 }
