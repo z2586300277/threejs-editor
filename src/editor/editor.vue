@@ -26,7 +26,7 @@ watch(() => dataCores.sceneName, (val) => {
     try {
         threeEditor.resetEditorStorage(params)
     } catch (error) {
-        localStorage.removeItem(val)
+        localStorage.removeItem(val + '-newEditor')
     }
 
 })
@@ -41,7 +41,7 @@ function init() {
             sceneParams: JSON.parse(localStorage.getItem(dataCores.sceneName + '-newEditor')) || tamplateJson
         })
     } catch (error) {
-        localStorage.removeItem(dataCores.sceneName)
+        localStorage.removeItem(dataCores.sceneName + '-newEditor')
     }
 
 

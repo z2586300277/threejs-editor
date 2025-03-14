@@ -234,7 +234,7 @@ function delScene(item) {
   const index = dataCores.options.findIndex(i => i.name === item.name)
   if (index > -1) {
     dataCores.options.splice(index, 1)
-    localStorage.removeItem(item.name)
+    localStorage.removeItem(item.name + '-newEditor')
     saveLocal()
   }
 }
