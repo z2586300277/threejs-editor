@@ -195,7 +195,14 @@ watch(openKeyEnable, (val) => threeEditor.handler.openKeyEnable = val)
 watch(previewScene, (val) => {
   leftCollapsed.value = val
   rightCollapsed.value = val
+  localStorage.setItem('new_previewScene', val)
 })
+if(localStorage.getItem('new_previewScene') === 'true') {
+  previewScene.value = true
+  leftCollapsed.value = true
+  rightCollapsed.value = true
+}
+
 watch(currentMode, (val) => {
   const { transformControls } = threeEditor
   if (val === '选中') threeEditor.handler.mode = 'select'
