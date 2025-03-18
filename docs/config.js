@@ -1,5 +1,6 @@
 window.editorJsons = [
     'editorJson/B站视频配置.json',
+    'editorJson/地图.json',
     'editorJson/标签编辑.json',
     'editorJson/草原追逐.json',
     'editorJson/车展.json',
@@ -40,7 +41,7 @@ window.models = [
 // 页脚链接配置
 window.footerLinks = {
     left: [
-     
+        { text: "🍂GitHub", url: "https://github.com/z2586300277/threejs-editor" }   
     ],
     right: [
         { text: "🍃组件案例", url: "https://z2586300277.github.io/three-cesium-examples" },
