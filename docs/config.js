@@ -1,4 +1,5 @@
 window.editorJsons = [
+    'editorJson/优雅永不过时.json',
     'editorJson/B站视频配置.json',
     'editorJson/地图.json',
     'editorJson/标签编辑.json',
@@ -17,6 +18,7 @@ window.editorJsons = [
 
 window.models = [
     'https://z2586300277.github.io/three-editor/dist/files/resource/datacenter.glb',
+    'https://z2586300277.github.io/3d-file-server/files/model/elegant.glb',
     'https://z2586300277.github.io/3d-file-server/models/glb/computer.glb',
     'https://z2586300277.github.io/3d-file-server/models/glb/daodan.glb',
     'https://z2586300277.github.io/3d-file-server/models/glb/feiji.glb',
