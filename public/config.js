@@ -41,7 +41,9 @@ window.models = [
 // 页脚链接配置
 window.footerLinks = {
     left: [
-        { text: "🍂GitHub", url: "https://github.com/z2586300277/threejs-editor" }   
+        { text: "🍂GitHub", url: "https://github.com/z2586300277/threejs-editor" } ,
+
+        { text: "⚡直接下载", url: "https://pan.quark.cn/s/bda85de79f2b"}
     ],
     right: [
         { text: "🍃组件案例", url: "https://z2586300277.github.io/three-cesium-examples" },
