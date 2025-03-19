@@ -221,6 +221,15 @@ const emitThreeEditor = (threeEditor) => {
   openKeyEnable.value = threeEditor.handler.openKeyEnable
   rightClickMenusEnable.value = threeEditor.handler.rightClickMenusEnable
   selectChildMode.value = threeEditor.handler.selectChildEnabled
+  Object.defineProperty(threeEditor.handler, 'openKeyEnable', {
+    get() {
+      return this._openKeyEnable ?? false
+    },
+    set(val) {
+      this._openKeyEnable = val
+      openKeyEnable.value = val
+    }
+  })
 }
 
 function saveLocal() {

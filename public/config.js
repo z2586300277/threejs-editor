@@ -101,14 +101,14 @@ document.addEventListener('DOMContentLoaded', function () {
     style.textContent = `
         .footer-links {
             position: fixed;
-            bottom: 20px;
+            bottom: 12px;
             z-index: 1000;
             display: flex;
             gap: 12px;
         }
         
-        .left-footer { left: 20px; }
-        .right-footer { right: 20px; }
+        .left-footer { left: 10px; }
+        .right-footer { right: 10px; }
         
         .footer-links a {
             color: #a8d4fd;
