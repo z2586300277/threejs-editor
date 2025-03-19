@@ -252,6 +252,7 @@ function delScene(item) {
     dataCores.options.splice(index, 1)
     localStorage.removeItem(item.name + '-newEditor')
     saveLocal()
+    if(dataCores.sceneName === item.name) dataCores.sceneName = dataCores.options[0]?.name || '三维测试'
   }
 }
 
