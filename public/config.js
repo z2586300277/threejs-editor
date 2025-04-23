@@ -1,6 +1,7 @@
 window.editorJsons = [
     'editorJson/优雅永不过时.json',
     'editorJson/B站视频配置.json',
+    'editorJson/瓦片3dtiles模型.json',
     'editorJson/地图.json',
     'editorJson/标签编辑.json',
     'editorJson/地空盒.json',
@@ -59,7 +60,7 @@ window.footerLinks = {
 window.copyright = "©2025 2586300277@qq.com All Rights Reserved.";
 
 // 创建dom - 精简版
-document.addEventListener('DOMContentLoaded', function () {
+const readmeFn = function () {
 
     if (localStorage.getItem('hide_author_info')) return
 
@@ -140,4 +141,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     `;
     document.head.appendChild(style);
-});
+}
+
+window.onload = () => setTimeout(() => readmeFn(), 1000)
+
