@@ -1,6 +1,7 @@
 window.editorJsons = [
     'editorJson/优雅永不过时.json',
     'editorJson/B站视频配置.json',
+    'editorJson/瓦片3dtiles模型.json',
     'editorJson/地图.json',
     'editorJson/标签编辑.json',
     'editorJson/地空盒.json',
@@ -44,13 +45,13 @@ window.models = [
 // 页脚链接配置
 window.footerLinks = {
     left: [
-        { text: "🍂GitHub", url: "https://github.com/z2586300277/threejs-editor" } ,
+        { text: "🍂GitHub", url: "https://github.com/z2586300277/threejs-editor" },
 
-        { text: "⚡直接下载", url: "https://pan.quark.cn/s/bda85de79f2b"}
+        { text: "⚡直接下载", url: "https://pan.quark.cn/s/bda85de79f2b" }
     ],
     right: [
         { text: "🍃组件案例", url: "https://z2586300277.github.io/three-cesium-examples" },
-        
+
         { text: "🍁文档主页", url: "https://z2586300277.github.io/three-editor/docs/dist/" }
     ]
 };
@@ -59,7 +60,10 @@ window.footerLinks = {
 window.copyright = "©2025 2586300277@qq.com All Rights Reserved.";
 
 // 创建dom - 精简版
-document.addEventListener('DOMContentLoaded', function () {
+const readmeFn = function () {
+
+    if (localStorage.getItem('hide_author_info')) return
+
     // 创建容器
     const leftFooter = document.createElement('div');
     leftFooter.className = 'footer-links left-footer';
@@ -137,4 +141,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     `;
     document.head.appendChild(style);
-});
+}
+
+window.onload = () => setTimeout(() => readmeFn(), 1000)
+
