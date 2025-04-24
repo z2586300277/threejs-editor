@@ -11,6 +11,7 @@
   "dependencies": {
     "3d-tiles-renderer": "^0.4.8",
     "@element-plus/icons-vue": "^2.3.1",
+    "echarts": "^5.6.0",
     "element-plus": "^2.9.5",
     "less": "^4.2.2",
     "less-loader": "^12.2.0",
