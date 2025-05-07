@@ -87,7 +87,7 @@ const loadModel = (url) => {
     })
   }
 }
-
+window.left_loadModel = loadModel
 async function clickLeft(v) {
   if (active.value === '配置案例') loadScene(v)
   else if (active.value === '模型') loadModel(v)

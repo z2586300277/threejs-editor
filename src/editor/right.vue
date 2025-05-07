@@ -26,21 +26,44 @@
                 <span class="group-title">辅助工具</span>
                 <div class="divider"></div>
             </div>
-            
+
             <div class="control-options">
                 <el-checkbox v-model="showGrid" @change="toggleGrid">
                     <div class="option-label">
-                        <el-icon><Grid /></el-icon>
+                        <el-icon>
+                            <Grid />
+                        </el-icon>
                         <span>显示网格</span>
                     </div>
                 </el-checkbox>
-                
+
                 <el-checkbox v-model="showAxes" @change="toggleAxes">
                     <div class="option-label">
-                        <el-icon><ScaleToOriginal /></el-icon>
+                        <el-icon>
+                            <ScaleToOriginal />
+                        </el-icon>
                         <span>显示坐标轴</span>
                     </div>
                 </el-checkbox>
+            </div>
+        </div>
+    </div>
+
+    <!-- 外部链接面板 -->
+    <div class="external-links">
+        <div class="control-group">
+            <div class="group-header">
+                <span class="group-title">快捷链接</span>
+                <div class="divider"></div>
+            </div>
+            <div class="links-container">
+                <el-button v-for="link in externalLinks" :key="link.name" type="primary" plain size="small"
+                    class="link-button" @click="openLink(link.url)">
+                    <el-icon>
+                        <component :is="link.icon" />
+                    </el-icon>
+                    <span>{{ link.name }}</span>
+                </el-button>
             </div>
         </div>
     </div>
@@ -92,8 +115,18 @@ const toggleAxes = (val) => {
     threeEditor.handler.helpers.axes.showAxes = val
 }
 
+// 外部链接数据
+const externalLinks = reactive([
+    { name: '素材库', url: 'https://z2586300277.github.io/3d-file-server/link.html', icon: 'Collection' },
+])
+
+// 打开外部链接
+const openLink = (url) => {
+    window.open(url, '_blank')
+}
+
 defineExpose({
-    helperConf(tr){
+    helperConf(tr) {
         showGrid.value = tr.handler.helpers.grid.showGrid
         showAxes.value = tr.handler.helpers.axes.showAxes
     }
@@ -200,4 +233,31 @@ defineExpose({
         font-size: 14px;
     }
 }
+
+.external-links {
+    margin-top: 20px;
+    width: 100%;
+    padding: 0 10px;
+    box-sizing: border-box;
+}
+
+.links-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.link-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-radius: 6px;
+    background-color: rgba(50, 50, 60, 0.5);
+    border: 1px solid rgba(168, 212, 253, 0.3);
+    transition: all 0.3s;
+    flex: 1;
+    min-width: 100px;
+}
+
 </style>

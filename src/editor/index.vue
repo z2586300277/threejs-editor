@@ -22,6 +22,7 @@
             </el-option>
           </el-select>
           <el-button class="btn-add" link icon="plus" @click="dialogVisible = true">新建场景</el-button>
+          <el-button class="btn-add" link icon="Upload" @click="loadModelUrl">导入模型</el-button>
           <el-dialog v-model="dialogVisible" title="命名场景" width="500">
             <el-input v-model="inputSceneName" placeholder="请输入场景名称" />
             <template #footer>
@@ -35,11 +36,13 @@
           </el-dialog>
         </div>
         <div class="title">
-          <el-link style="font-size: 17px;" @click="openUrl('https://z2586300277.github.io/')">🏠主页</el-link>&nbsp;&nbsp;
+          <el-link style="font-size: 17px;"
+            @click="openUrl('https://z2586300277.github.io/')">🏠主页</el-link>&nbsp;&nbsp;
           - &nbsp;
           <img class="logo" src="/site.png" alt="logo" width="18px" height="18px">
           &nbsp;{{ dataCores.sceneName || ' - - - - ' }}&nbsp;-&nbsp;&nbsp;
-          <el-link @click="openUrl('https://z2586300277.github.io/three-editor/dist/#/editor')" style="font-size: 17px;">🍁旧编辑器</el-link>
+          <el-link @click="openUrl('https://z2586300277.github.io/three-editor/dist/#/editor')"
+            style="font-size: 17px;">🍁旧编辑器</el-link>
         </div>
         <div class="header-right">
           <el-button class="btn-add" link icon="Document" @click="exportTemplateJson">导出</el-button>
@@ -197,7 +200,7 @@ watch(previewScene, (val) => {
   rightCollapsed.value = val
   localStorage.setItem('new_previewScene', val)
 })
-if(localStorage.getItem('new_previewScene') === 'true') {
+if (localStorage.getItem('new_previewScene') === 'true') {
   previewScene.value = true
   leftCollapsed.value = true
   rightCollapsed.value = true
@@ -252,7 +255,7 @@ function delScene(item) {
     dataCores.options.splice(index, 1)
     localStorage.removeItem(item.name + '-newEditor')
     saveLocal()
-    if(dataCores.sceneName === item.name) dataCores.sceneName = dataCores.options[0]?.name || '三维测试'
+    if (dataCores.sceneName === item.name) dataCores.sceneName = dataCores.options[0]?.name || '三维测试'
   }
 }
 
@@ -278,6 +281,11 @@ function saveScene() {
   else dataCores.sceneName = ''
   ElMessage.success('保存成功')
   saveLocal()
+}
+
+function loadModelUrl() {
+  const url = window.prompt('请输入模型地址url', 'https://z2586300277.github.io/3d-file-server/examples/coffeeMug/coffeeMug.glb')
+  window.left_loadModel?.(url)
 }
 </script>
 
@@ -537,7 +545,8 @@ function saveScene() {
     font-size: 11px;
   }
 
-  .desc {   color: #cccccc;
+  .desc {
+    color: #cccccc;
   }
 }
 </style>
