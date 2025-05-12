@@ -144,5 +144,5 @@ const readmeFn = function () {
     document.head.appendChild(style);
 }
 
-window.onload = () => setTimeout(() => readmeFn(), 1000)
+window.onload = () => setTimeout(() => readmeFn(), 500)
 
