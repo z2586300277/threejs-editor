@@ -53,7 +53,7 @@ window.footerLinks = {
     right: [
         { text: "🍃组件案例", url: "https://z2586300277.github.io/three-cesium-examples" },
 
-        { text: "🍁文档主页", url: "https://z2586300277.github.io/editor-docs/" }
+        { text: "🍁文档主页", url: "https://z2586300277.github.io/three-editor/docs/dist/" }
     ]
 };
 
@@ -144,5 +144,5 @@ const readmeFn = function () {
     document.head.appendChild(style);
 }
 
-window.onload = () => setTimeout(() => readmeFn(), 1000)
+window.onload = () => setTimeout(() => readmeFn(), 500)
 
