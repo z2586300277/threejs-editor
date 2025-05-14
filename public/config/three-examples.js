@@ -14,6 +14,13 @@ export default [
                 codeUrl: HOST + 'demos/chartsMap.js',
                 image: HOST + 'demos/chartMap.png',
             },
+            {
+                id: 'rawThree',
+                name: '原生three.js开发',
+                author: 'z2586300277',
+                codeUrl: HOST + 'demos/rawThree.js',
+                image: HOST + 'demos/rawThree.jpg',
+            }
 
         ]
     }

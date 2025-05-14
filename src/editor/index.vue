@@ -37,12 +37,17 @@
         </div>
         <div class="title">
           <el-link style="font-size: 17px;"
+            @click="openUrl('https://z2586300277.github.io/')">🏠作者主页</el-link>&nbsp;&nbsp;
+          <el-link style="font-size: 17px;"
             @click="openUrl('https://z2586300277.github.io/three-editor/dist/#/editor')">🍁旧编辑器</el-link>&nbsp;&nbsp;
           - &nbsp;
           <img class="logo" src="/site.png" alt="logo" width="18px" height="18px">
           &nbsp;{{ dataCores.sceneName || ' - - - - ' }}&nbsp;-&nbsp;&nbsp;
           <el-link @click="openUrl('https://z2586300277.github.io/threejs-editor/apply.html')"
             style="font-size: 17px;">🌾嵌入项目</el-link>
+            &nbsp;&nbsp;
+              <el-link @click="openUrl('https://github.com/z2586300277/threejs-editor/tree/main/src/editor/compoents')"
+            style="font-size: 17px;">🌳组件开发</el-link>
         </div>
         <div class="header-right">
           <el-button class="btn-add" link icon="Document" @click="exportTemplateJson">导出</el-button>
