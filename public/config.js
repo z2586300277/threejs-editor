@@ -3,6 +3,7 @@ window.editorJsons = [
     'editorJson/B站视频配置.json',
     'editorJson/瓦片3dtiles模型.json',
     'editorJson/地图.json',
+    'editorJson/内嵌网页.json',
     'editorJson/图表组件.json',
     'editorJson/标签编辑.json',
     'editorJson/地空盒.json',
