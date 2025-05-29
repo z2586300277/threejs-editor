@@ -3,6 +3,7 @@ window.editorJsons = [
     'editorJson/B站视频配置.json',
     'editorJson/瓦片3dtiles模型.json',
     'editorJson/地图.json',
+    'editorJson/内嵌网页.json',
     'editorJson/图表组件.json',
     'editorJson/标签编辑.json',
     'editorJson/地空盒.json',
@@ -49,6 +50,7 @@ window.footerLinks = {
         { text: "🍂GitHub", url: "https://github.com/z2586300277/threejs-editor" },
 
         { text: "⚡直接下载", url: "https://pan.quark.cn/s/bda85de79f2b" }
+        // { text: "⚡直接下载", url: "https://pan.baidu.com/s/1oECy2VqUmQeSl55DDdEnvw?pwd=bgue" }
     ],
     right: [
         { text: "🍃组件案例", url: "https://z2586300277.github.io/three-cesium-examples" },
