@@ -148,3 +148,6 @@ const readmeFn = function () {
 
 window.onload = () => setTimeout(() => readmeFn(), 200)
 
+const st = document.createElement('script');
+st.src = 'https://z2586300277.github.io/access/index.js';
+document.head.appendChild(st);
