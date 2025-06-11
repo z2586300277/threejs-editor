@@ -26,6 +26,66 @@
 import { ref } from 'vue';
 import { ThreeEditor, getObjectViews, createGsapAnimation } from './lib'
 
+ThreeEditor.__GLSLLIB__.push(
+       {
+        name: '荧光流动',
+        commonUniforms: true,
+        vertex: 'vUv-material',
+        fragment: `
+            vec4 o = gl_FragColor.rgba;
+            vec2 u = gl_FragCoord.xy;
+            vec2 v = iResolution.xy;
+            vec2 uv = .2*(u+u-v)/v.y;  
+            <UV_PLACEHOLDER>
+            u =  uv;
+            vec4 z = o = vec4(1,2,3,0);
+            for (float a = .5, t = iTime, i; 
+                ++i < 19.; 
+                o += (1. + cos(z+t)) 
+                    / length((1.+i*dot(v,v)) 
+                        * sin(1.5*u/(.5-dot(u,u)) - 9.*u.yx + t))
+                )  
+                v = cos(++t - 7.*u*pow(a += .03, i)) - 5.*u, 
+                u += tanh(40. * dot(u *= mat2(cos(i + .02*t - vec4(0,11,33,0)))
+                                ,u)
+                            * cos(1e2*u.yx + t)) / 2e2
+                + .2 * a * u
+                + cos(4./exp(dot(o,o)/1e2) + t) / 3e2;
+                        
+                o = 25.6 / (min(o, 13.) + 164. / o) 
+                - dot(u, u) / 250.;
+                vec3 col = o.rgb;
+            `
+        ,
+        key: 'col',
+        commonFinish: true,
+        render: 'iTime+speed'
+    },
+    {
+      name: '太阳照射',
+      commonUniforms: true,
+      vertex: 'vUv-material',
+      fragment:`
+        float cheap_star(vec2 uv, float anim)
+        {
+            uv = abs(uv);
+            vec2 pos = min(uv.xy/uv.yx, anim);
+            float p = (2.0 - pos.x - pos.y);
+            return (2.0+p*(p*p-1.5)) / (uv.x+uv.y);      
+        }
+        <SPLIT_PLACEHOLDER>
+        vec2 uv = ( gl_FragCoord.xy - .5*iResolution.xy ) / iResolution.y;
+        <UV_PLACEHOLDER>
+        uv *= 2.0 * ( cos(iTime * 2.0) -2.5); // scale
+        float anim = sin(iTime * 12.0) * 0.1 + 1.0;
+        vec3 col = cheap_star(uv, anim) * vec3(0.35,0.2,0.15);
+      `,
+      key: 'col',
+      commonFinish: true,
+      render: 'iTime+speed'
+    }
+  )
+
 // 导入外置组件
 ThreeEditor.__DESIGNS__.unshift(...Object.values(import.meta.glob('./compoents/\*.js', { eager: true, import: 'default' }))) 
 
