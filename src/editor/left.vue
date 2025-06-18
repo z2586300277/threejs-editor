@@ -11,7 +11,7 @@
     <div class="content-panel">
       <div class="build">
         <div class="back" v-for="i in showList">
-          <div class="item">
+          <div class="item" draggable="true" @dragend="e => dragAdd(e, i)"> 
             <el-link @click="clickLeft(i)">
               {{ i.split('/').pop() }}
             </el-link>
@@ -25,6 +25,7 @@
 <script setup>
 import { ref } from 'vue';
 import { ThreeEditor, getObjectViews, createGsapAnimation } from './lib'
+import * as THREE from 'three';
 
 ThreeEditor.__GLSLLIB__.push(
        {
@@ -133,13 +134,14 @@ function setActive(item) {
 }
 
 const loadScene = (v) => fetch(v).then(res => res.json()).then(res => threeEditor?.resetEditorStorage(res))
-const loadModel = (url) => {
+const loadModel = (url, point) => {
   const { modelCores } = window.threeEditor
   const { camera, controls, transformControls } = threeEditor
   const { loaderService } = modelCores.loadModel(url)
   document.body.appendChild(loadingDiv)
   loaderService.progress = progress => loadingDiv.innerText = '下载' + (progress * 100).toFixed(2) + '%'
   loaderService.complete = model => {
+    if(point) model.position.copy(point)
     document.body.removeChild(loadingDiv)
     const { maxView, target } = getObjectViews(model)
     Promise.all([createGsapAnimation(camera.position, maxView), createGsapAnimation(controls.target, target)]).then(() => {
@@ -148,9 +150,9 @@ const loadModel = (url) => {
   }
 }
 window.left_loadModel = loadModel
-async function clickLeft(v) {
+async function clickLeft(v, point) {
   if (active.value === '配置案例') loadScene(v)
-  else if (active.value === '模型') loadModel(v)
+  else if (active.value === '模型') loadModel(v, point)
   else if (active.value === '组件') {
     const { scene, transformControls } = threeEditor
     const design = ThreeEditor.__DESIGNS__.find(d => d.label === v)
@@ -159,6 +161,7 @@ async function clickLeft(v) {
     mesh.isDesignMesh = true
     mesh.designType = design.name
     scene.add(mesh)
+    if (point) mesh.position.copy(point)
     const { maxView, target } = getObjectViews(mesh)
     //检测是否存在maxView
     if(maxView.x){
@@ -166,6 +169,23 @@ async function clickLeft(v) {
       createGsapAnimation(threeEditor.controls.target, target)
     }
     transformControls.attach(mesh)
+  }
+}
+
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+const dragAdd = (e, v) => {
+  e.preventDefault();
+  const { dataTransfer } = e;
+  const { clientX, clientY } = e;
+  mouse.x = (clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(clientY / window.innerHeight) * 2 + 1;
+  raycaster.setFromCamera(mouse, threeEditor.camera);
+  const intersects = raycaster.intersectObjects(threeEditor.scene.children, true);
+  if (intersects.length > 0) {
+    const intersect = intersects[0];
+    const { point } = intersect;
+    clickLeft(v, point)
   }
 }
 
