@@ -118,6 +118,8 @@ const toggleAxes = (val) => {
 // 外部链接数据
 const externalLinks = reactive([
     { name: '素材库', url: 'https://z2586300277.github.io/3d-file-server/link.html', icon: 'Collection' },
+    { name: '官方示例', url: 'https://openthree.github.io/three-official-examples/#/example', icon: 'Document' },
+
 ])
 
 // 打开外部链接
