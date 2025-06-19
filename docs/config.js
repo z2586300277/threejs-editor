@@ -3,14 +3,15 @@ window.editorJsons = [
     'editorJson/B站视频配置.json',
     'editorJson/瓦片3dtiles模型.json',
     'editorJson/自定义着色器.json',
+    'editorJson/城市效果.json',
     'editorJson/地图.json',
     'editorJson/内嵌网页.json',
-    'editorJson/图表组件.json',
-    'editorJson/标签编辑.json',
-    'editorJson/地空盒.json',
     'editorJson/草原追逐.json',
     'editorJson/车展.json',
     'editorJson/机房.json',
+    'editorJson/图表组件.json',
+    'editorJson/标签编辑.json',
+    'editorJson/地空盒.json',
     'editorJson/胜利的导弹.json',
     'editorJson/数字飞机.json',
     'editorJson/draw.json',
@@ -18,12 +19,12 @@ window.editorJsons = [
     'editorJson/几何体.json',
     'editorJson/关爱地球.json',
     'editorJson/复制物体.json',
-    'editorJson/城市效果.json',
 ]
 
 window.models = [
     'https://z2586300277.github.io/three-editor/dist/files/resource/datacenter.glb',
     'https://z2586300277.github.io/3d-file-server/files/model/elegant.glb',
+    'https://z2586300277.github.io/3d-file-server/models/modern_city.glb',
     'https://z2586300277.github.io/3d-file-server/models/glb/computer.glb',
     'https://z2586300277.github.io/3d-file-server/models/glb/daodan.glb',
     'https://z2586300277.github.io/3d-file-server/models/glb/feiji.glb',
@@ -148,8 +149,4 @@ const readmeFn = function () {
 }
 
 window.onload = () => setTimeout(() => readmeFn(), 200)
-
-const st = document.createElement('script');
-st.src = 'https://z2586300277.github.io/access/index.js';
-document.head.appendChild(st);
 
