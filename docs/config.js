@@ -5,6 +5,7 @@ window.editorJsons = [
     'editorJson/自定义着色器.json',
     'editorJson/城市效果.json',
     'editorJson/地图.json',
+    'editorJson/卫星地图.json',
     'editorJson/内嵌网页.json',
     'editorJson/草原追逐.json',
     'editorJson/车展.json',
