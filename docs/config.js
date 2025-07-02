@@ -52,7 +52,7 @@ window.footerLinks = {
     left: [
         { text: "🍂GitHub", url: "https://github.com/z2586300277/threejs-editor" },
 
-        { text: "⚡直接下载", url: "https://pan.quark.cn/s/bda85de79f2b" }
+        { text: "⚡直接下载", url: "https://pan.quark.cn/s/1f507069e8f1" }
         // { text: "⚡直接下载", url: "https://pan.baidu.com/s/1oECy2VqUmQeSl55DDdEnvw?pwd=bgue" }
     ],
     right: [
