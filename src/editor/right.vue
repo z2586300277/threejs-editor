@@ -23,11 +23,22 @@
     <div class="helper-controls">
         <div class="control-group">
             <div class="group-header">
-                <span class="group-title">辅助工具</span>
+                <span class="group-title">场景选项</span>
                 <div class="divider"></div>
             </div>
 
             <div class="control-options">
+
+                <!-- logarithmicDepthBuffer 选项 -->
+                <el-checkbox v-model="logbuffer">
+                    <div class="option-label">
+                        <el-icon>
+                            <Histogram />
+                        </el-icon>
+                        <span>全局对数深度缓冲(刷新)</span>
+                    </div>
+                </el-checkbox>
+
                 <el-checkbox v-model="showGrid" @change="toggleGrid">
                     <div class="option-label">
                         <el-icon>
@@ -70,8 +81,8 @@
 </template>
 
 <script setup>
-import { computed, reactive, ref } from 'vue'
-import { Grid, ScaleToOriginal } from '@element-plus/icons-vue'
+import { computed, reactive, ref, watch } from 'vue'
+import { Grid, ScaleToOriginal, Histogram } from '@element-plus/icons-vue'
 
 const selectedSet = ref('蓝天')
 const datalist = reactive([
@@ -102,8 +113,8 @@ const setEnv = (v) => {
 };
 
 // 网格和坐标轴控制
-const showGrid = ref(true)
-const showAxes = ref(true)
+const showGrid = ref(false)
+const showAxes = ref(false)
 
 // 处理网格显示/隐藏
 const toggleGrid = (val) => {
@@ -126,6 +137,15 @@ const externalLinks = reactive([
 const openLink = (url) => {
     window.open(url, '_blank')
 }
+
+const logbuffer = ref(true)
+if (localStorage.getItem('new_threeEditor_logBuffer') === 'false') logbuffer.value = false
+watch(logbuffer, (val) => {
+    localStorage.setItem('new_threeEditor_logBuffer', val)
+    setTimeout(() => {
+        window.location.reload()
+    }, 500);
+})
 
 defineExpose({
     helperConf(tr) {
