@@ -3,6 +3,7 @@ window.editorJsons = [
     'editorJson/B站视频配置.json',
     'editorJson/瓦片3dtiles模型.json',
     'editorJson/自定义着色器.json',
+    'editorJson/园区.json',
     'editorJson/城市效果.json',
     'editorJson/地图.json',
     'editorJson/卫星地图.json',
@@ -52,7 +53,7 @@ window.footerLinks = {
     left: [
         { text: "🍂GitHub", url: "https://github.com/z2586300277/threejs-editor" },
 
-        { text: "⚡直接下载", url: "https://pan.quark.cn/s/bda85de79f2b" }
+        { text: "⚡直接下载", url: "https://pan.quark.cn/s/1f507069e8f1" }
         // { text: "⚡直接下载", url: "https://pan.baidu.com/s/1oECy2VqUmQeSl55DDdEnvw?pwd=bgue" }
     ],
     right: [

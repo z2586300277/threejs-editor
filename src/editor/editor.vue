@@ -34,10 +34,12 @@ watch(() => dataCores.sceneName, (val) => {
 function init() {
 
     try {
+        let logarithmicDepthBuffer = true
+        if (localStorage.getItem('new_threeEditor_logBuffer') === 'false') logarithmicDepthBuffer = false
         threeEditor = new ThreeEditor(editor.value, {
             fps: null,
             pixelRatio: window.devicePixelRatio * 1,
-            webglRenderParams: { antialias: true, alpha: true, logarithmicDepthBuffer: true },
+            webglRenderParams: { antialias: true, alpha: true, logarithmicDepthBuffer },
             sceneParams: JSON.parse(localStorage.getItem(dataCores.sceneName + '-newEditor')) || tamplateJson
         })
     } catch (error) {
