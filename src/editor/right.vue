@@ -64,7 +64,7 @@
     <div class="external-links">
         <div class="control-group">
             <div class="group-header">
-                <span class="group-title">快捷链接</span>
+                <span class="group-title">快捷链接 <img src="https://visitor-badge.laobi.icu/badge?page_id=three_editor" > </span> 
                 <div class="divider"></div>
             </div>
             <div class="links-container">
@@ -224,6 +224,9 @@ defineExpose({
     font-weight: 500;
     color: #a8d4fd;
     margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .divider {
