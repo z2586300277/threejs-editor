@@ -57,7 +57,7 @@ window.footerLinks = {
         // { text: "⚡直接下载", url: "https://pan.baidu.com/s/1oECy2VqUmQeSl55DDdEnvw?pwd=bgue" }
     ],
     right: [
-        { text: "🍃组件案例", url: "https://z2586300277.github.io/three-cesium-examples" },
+        { text: "🍃开源案例", url: "https://z2586300277.github.io/three-cesium-examples" },
 
         { text: "🍁文档主页", url: "https://z2586300277.github.io/editor-docs/" }
     ]
