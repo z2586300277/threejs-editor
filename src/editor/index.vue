@@ -184,9 +184,10 @@ import { ElButton, ElSelect, ElOption, ElMessage, ElIcon } from 'element-plus'
 import { Pointer, Position, RefreshRight, ZoomIn } from '@element-plus/icons-vue'
 import LeftPanel from './left.vue'
 import RightPanel from './right.vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 const route = useRoute()
+const router = useRouter()
 let namePreviewScene = false
 if (route.query.sceneName) {
     namePreviewScene = true
@@ -308,8 +309,7 @@ function loadModelUrl() {
 }
 function shareLink() {
   const sceneName = window.currentOnlineSceneName || ''
-  const url = window.location.origin + '/#/editor?sceneName=' + encodeURIComponent(sceneName)
-  window.open(url, '_blank')
+  window.open(router.resolve({ path: '/editor', query: { sceneName } }).href, '_blank')
 }
 </script>
 
