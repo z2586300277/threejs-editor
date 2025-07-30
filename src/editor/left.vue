@@ -151,7 +151,10 @@ const loadModel = (url, point) => {
 }
 window.left_loadModel = loadModel
 async function clickLeft(v, point) {
-  if (active.value === '配置案例') loadScene(v)
+  if (active.value === '配置案例') {
+    window.currentOnlineSceneName = v.split('/').pop().replace('.json', '')
+    loadScene(v)
+  }
   else if (active.value === '模型') loadModel(v, point)
   else if (active.value === '组件') {
     const { scene, transformControls } = threeEditor

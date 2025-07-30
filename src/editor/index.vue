@@ -1,5 +1,5 @@
 <template>
-  <div class="layout">
+  <div v-show="!namePreviewScene" class="layout">
     <!-- 顶部导航栏 -->
     <div class="header" v-show="!previewScene">
       <div class="header-box">
@@ -129,6 +129,11 @@
           <div class="switch-item" :class="{ 'disabled': previewScene }">
             <el-switch inactive-text="快捷键" v-model="openKeyEnable" active-color="#a8d4fd" :disabled="previewScene" />
           </div>
+          <div class="switch-item">
+            <el-link type="primary" @click="shareLink">
+              分享链接
+            </el-link>
+          </div>
         </div>
         <div class="shortcuts-guide" :class="{ 'disabled': previewScene }">
           <div class="shortcuts-content" v-show="openKeyEnable">
@@ -179,6 +184,15 @@ import { ElButton, ElSelect, ElOption, ElMessage, ElIcon } from 'element-plus'
 import { Pointer, Position, RefreshRight, ZoomIn } from '@element-plus/icons-vue'
 import LeftPanel from './left.vue'
 import RightPanel from './right.vue'
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
+let namePreviewScene = false
+if (route.query.sceneName) {
+    namePreviewScene = true
+    const sn = 'editorJson/' + route.query.sceneName + '.json'
+    window.editorPreviewSceneUrl = __isProduction__ ? '/threejs-editor/' + sn : '/' + sn
+}
 
 const rightPanel = ref(null)
 const dialogVisible = ref(false);
@@ -291,6 +305,11 @@ function saveScene() {
 function loadModelUrl() {
   const url = window.prompt('请输入模型地址url', 'https://z2586300277.github.io/3d-file-server/examples/coffeeMug/coffeeMug.glb')
   window.left_loadModel?.(url)
+}
+function shareLink() {
+  const sceneName = window.currentOnlineSceneName || ''
+  const url = window.location.origin + '/#/editor?sceneName=' + encodeURIComponent(sceneName)
+  window.open(url, '_blank')
 }
 </script>
 

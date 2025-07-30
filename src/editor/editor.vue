@@ -31,16 +31,26 @@ watch(() => dataCores.sceneName, (val) => {
 
 })
 
-function init() {
+async function init() {
+
 
     try {
+        
+        let sceneParams = JSON.parse(localStorage.getItem(dataCores.sceneName + '-newEditor')) || tamplateJson
+        if (window.editorPreviewSceneUrl) {
+            try {
+                const res = await fetch(window.editorPreviewSceneUrl).then(res => res.json())
+                if(res) sceneParams = res
+            } catch (error) {}
+        }
+
         let logarithmicDepthBuffer = true
         if (localStorage.getItem('new_threeEditor_logBuffer') === 'false') logarithmicDepthBuffer = false
         threeEditor = new ThreeEditor(editor.value, {
             fps: null,
             pixelRatio: window.devicePixelRatio * 1,
             webglRenderParams: { antialias: true, alpha: true, logarithmicDepthBuffer },
-            sceneParams: JSON.parse(localStorage.getItem(dataCores.sceneName + '-newEditor')) || tamplateJson
+            sceneParams
         })
     } catch (error) {
         localStorage.removeItem(dataCores.sceneName + '-newEditor')
