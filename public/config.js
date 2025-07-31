@@ -4,6 +4,8 @@ window.editorJsons = [
     'editorJson/瓦片3dtiles模型.json',
     'editorJson/自定义着色器.json',
     'editorJson/园区.json',
+    'editorJson/广东.json',
+    'editorJson/燃烧城市.json',
     'editorJson/城市效果.json',
     'editorJson/地图.json',
     'editorJson/卫星地图.json',
