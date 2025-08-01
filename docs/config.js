@@ -1,6 +1,7 @@
 window.editorJsons = [
     'editorJson/优雅永不过时.json',
     'editorJson/B站视频配置.json',
+    'editorJson/优雅园区.json',
     'editorJson/瓦片3dtiles模型.json',
     'editorJson/自定义着色器.json',
     'editorJson/园区.json',
