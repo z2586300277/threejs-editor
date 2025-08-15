@@ -68,7 +68,7 @@ window.footerLinks = {
     right: [
         { text: "🍃开源案例", url: "https://z2586300277.github.io/three-cesium-examples" },
 
-        { text: "🍁文档主页", url: "https://z2586300277.github.io/editor-docs/" }
+        { text: "🍁新版文档", url: "https://z2586300277.github.io/editor-docs/" }
     ]
 };
 
@@ -132,10 +132,9 @@ const readmeFn = function () {
         .right-footer { right: 10px; }
         
         .footer-links a {
-            color: #a8d4fd;
+            color: #cbe3f9ff;
             text-decoration: none;
-            font-size: 14px;
-            opacity: 0.8;
+            font-size: 16px;
             transition: all 0.3s;
             padding: 5px 10px;
             border-radius: 4px;
