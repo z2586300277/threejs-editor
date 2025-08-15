@@ -1,12 +1,21 @@
 window.editorJsons = [
     'editorJson/优雅永不过时.json',
     'editorJson/B站视频配置.json',
+    'editorJson/优雅园区.json',
     'editorJson/瓦片3dtiles模型.json',
+    'editorJson/coffee.json',
+    'editorJson/行政区.json',
     'editorJson/自定义着色器.json',
     'editorJson/园区.json',
+    'editorJson/广东.json',
+    'editorJson/视频.json',
+    'editorJson/模糊.json',
+    'editorJson/燃烧城市.json',
     'editorJson/城市效果.json',
     'editorJson/地图.json',
     'editorJson/卫星地图.json',
+    'editorJson/火烧云.json',
+    'editorJson/魔法战士.json',
     'editorJson/内嵌网页.json',
     'editorJson/草原追逐.json',
     'editorJson/车展.json',
@@ -57,9 +66,9 @@ window.footerLinks = {
         // { text: "⚡直接下载", url: "https://pan.baidu.com/s/1oECy2VqUmQeSl55DDdEnvw?pwd=bgue" }
     ],
     right: [
-        { text: "🍃组件案例", url: "https://z2586300277.github.io/three-cesium-examples" },
+        { text: "🍃开源案例", url: "https://z2586300277.github.io/three-cesium-examples" },
 
-        { text: "🍁文档主页", url: "https://z2586300277.github.io/editor-docs/" }
+        { text: "🍁新版文档", url: "https://z2586300277.github.io/editor-docs/" }
     ]
 };
 
@@ -123,10 +132,9 @@ const readmeFn = function () {
         .right-footer { right: 10px; }
         
         .footer-links a {
-            color: #a8d4fd;
+            color: #cbe3f9ff;
             text-decoration: none;
-            font-size: 14px;
-            opacity: 0.8;
+            font-size: 16px;
             transition: all 0.3s;
             padding: 5px 10px;
             border-radius: 4px;

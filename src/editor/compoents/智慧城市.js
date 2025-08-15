@@ -4,7 +4,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 export default {
     name: '智慧城市',
     label: '智慧城市',
-    create(_, {scene}) {
+    create(_, { scene }) {
         const shaderMaterial = new THREE.ShaderMaterial({
             vertexShader: `
                 uniform vec3 uColorBottom;
@@ -105,11 +105,11 @@ export default {
                 uColorBottom: { value: new THREE.Color(0x6373b6) },
                 uColorTop: { value: new THREE.Color(0xffffff) },
                 uSweepColor: { value: new THREE.Color(0xb1ddec) },
-                uMinY: { value: 0.0 }, 
-                uMaxY: { value: 1.0 }, 
+                uMinY: { value: 0.0 },
+                uMaxY: { value: 1.0 },
                 uTime: { value: 0.0 },
                 uLightDir: { value: new THREE.Vector3(0.5, 0.5, 0.5).normalize() },
-                uScanWidth: { value: 0.1 }, 
+                uScanWidth: { value: 0.1 },
                 uScanSoftness: { value: 0.8 }
             },
             transparent: true,
@@ -117,22 +117,25 @@ export default {
 
         const group = new THREE.Group();
 
-        new GLTFLoader().load(`https://z2586300277.github.io/3d-file-server/` + 'models/whitebuild.glb', (gltf) => {
-            const model = gltf.scene;
-            model.scale.multiplyScalar(300);
-            const bounds = new THREE.Box3().setFromObject(model);
-            shaderMaterial.uniforms.uMinY.value = bounds.min.y;
-            shaderMaterial.uniforms.uMaxY.value = bounds.max.y;
-            model.traverse(child => { 
-                if (child.isMesh) child.material = shaderMaterial; 
+        return new Promise(resolve => {
+
+            new GLTFLoader().load(`https://z2586300277.github.io/3d-file-server/` + 'models/whitebuild.glb', (gltf) => {
+                const model = gltf.scene;
+                model.scale.multiplyScalar(300);
+                const bounds = new THREE.Box3().setFromObject(model);
+                shaderMaterial.uniforms.uMinY.value = bounds.min.y;
+                shaderMaterial.uniforms.uMaxY.value = bounds.max.y;
+                model.traverse(child => {
+                    if (child.isMesh) child.material = shaderMaterial;
+                });
+                group.add(model);
+                resolve(group);
             });
-            group.add(model);
-        });
 
-        scene.addUpdateListener(() => {
-            shaderMaterial.uniforms.uTime.value += 0.01;
-        });
+            scene.addUpdateListener(() => {
+                shaderMaterial.uniforms.uTime.value += 0.01;
+            });
 
-        return group;
+        });
     }
 }
