@@ -8,6 +8,8 @@ window.editorJsons = [
     'editorJson/自定义着色器.json',
     'editorJson/园区.json',
     'editorJson/广东.json',
+    'editorJson/服务中心.json',
+    'editorJson/特效.json',
     'editorJson/视频.json',
     'editorJson/模糊.json',
     'editorJson/燃烧城市.json',
