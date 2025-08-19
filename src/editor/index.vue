@@ -99,6 +99,11 @@
                 <ZoomIn />
               </el-icon>缩放
             </el-radio-button>
+            <el-radio-button label="无操作" value="无操作">
+              <el-icon>
+                <Remove  />
+              </el-icon>无操作
+            </el-radio-button>
           </el-radio-group>
         </div>
       </div>
@@ -181,7 +186,7 @@
 import { reactive, ref, watch } from 'vue'
 import Editor from './editor.vue'
 import { ElButton, ElSelect, ElOption, ElMessage, ElIcon } from 'element-plus'
-import { Pointer, Position, RefreshRight, ZoomIn } from '@element-plus/icons-vue'
+import { Pointer, Position, RefreshRight, ZoomIn, Remove  } from '@element-plus/icons-vue'
 import LeftPanel from './left.vue'
 import RightPanel from './right.vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -229,13 +234,18 @@ if (localStorage.getItem('new_previewScene') === 'true') {
 watch(currentMode, (val) => {
   const { transformControls } = threeEditor
   if (val === '选中') threeEditor.handler.mode = 'select'
+  else if(val === '无操作') threeEditor.handler.mode = 'none'
   else threeEditor.handler.mode = 'transform'
   if (val === '平移') transformControls.setMode('translate')
   else if (val === '旋转') transformControls.setMode('rotate')
   else if (val === '缩放') transformControls.setMode('scale')
 })
 
-const getEvent = (e) => threeEditor.getSceneEvent(e)
+const getEvent = (e) => {
+  threeEditor.getSceneEvent(e, info => {
+     info.rootObject?.EVENTCALL?.(info) // 添加在定义点击事件处理
+  })
+}
 const openPanel = () => threeEditor.openControlPanel()
 
 const emitThreeEditor = (threeEditor) => {
