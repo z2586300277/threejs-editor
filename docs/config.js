@@ -2,6 +2,7 @@ window.editorJsons = [
     'editorJson/优雅永不过时.json',
     'editorJson/B站视频配置.json',
     'editorJson/优雅园区.json',
+    'editorJson/二维码.json',
     'editorJson/瓦片3dtiles模型.json',
     'editorJson/coffee.json',
     'editorJson/自定义操作和事件.json',
