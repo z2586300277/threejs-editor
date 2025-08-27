@@ -53,6 +53,10 @@ export default {
             state ? playActions([1, 3, 5, 7]) : playActions([2, 4, 6, 8]);
         });
 
+        model.REMOVECALL = () => {
+            model.remove(label);
+        }
+
         return model;
     },
 };
