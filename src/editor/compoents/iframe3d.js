@@ -28,9 +28,11 @@ export default {
         iframe.height = params.height;
         iframe.style.backgroundColor = "white";
         iframe.style.border = "none";
+        iframe.style.pointerEvents = 'none';
         container.appendChild(iframe);
 
         const mesh = new CSS3DObject(container);
+        mesh.scale.set(0.03, 0.03, 0.03);
         mesh.add_params = params;
 
         if (trans) {

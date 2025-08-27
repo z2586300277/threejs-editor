@@ -91,6 +91,10 @@ export default {
 
         }
 
+        group.REMOVECALL = () => {
+            group.remove(infoPanel);
+        }
+
         return group;
     }
 }
