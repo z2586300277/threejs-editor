@@ -8,6 +8,7 @@ window.editorJsons = [
     'editorJson/coffee.json',
     'editorJson/燃烧城市.json',
     'editorJson/B站视频配置.json',
+    'editorJson/音乐.json',
     'editorJson/广东.json',
     'editorJson/卫星地图.json',
     'editorJson/魔法战士.json',
