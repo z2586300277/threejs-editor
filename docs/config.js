@@ -18,6 +18,8 @@ window.editorJsons = [
     'editorJson/图表组件.json',
     'editorJson/自定义操作和事件.json',
     'editorJson/投影.json',
+    '雾.json',
+    '植物属性.json',
     'editorJson/物体路径移动.json',
     'editorJson/自定义着色器.json',
     'editorJson/园区.json',
