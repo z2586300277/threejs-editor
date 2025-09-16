@@ -8,6 +8,7 @@ window.editorJsons = [
     'editorJson/coffee.json',
     'editorJson/燃烧城市.json',
     'editorJson/B站视频配置.json',
+    'editorJson/音乐.json',
     'editorJson/广东.json',
     'editorJson/卫星地图.json',
     'editorJson/魔法战士.json',
@@ -17,6 +18,9 @@ window.editorJsons = [
     'editorJson/图表组件.json',
     'editorJson/自定义操作和事件.json',
     'editorJson/投影.json',
+    'editorJson/雾.json',
+    'editorJson/植物属性.json',
+    'editorJson/物体路径移动.json',
     'editorJson/自定义着色器.json',
     'editorJson/园区.json',
     'editorJson/服务中心.json',
@@ -76,6 +80,10 @@ window.footerLinks = {
         { text: "🍁新版文档", url: "https://z2586300277.github.io/editor-docs/" }
     ]
 };
+
+const script = document.createElement('script');
+script.src = 'https://z2586300277.github.io/editorJson/v2.js';
+document.head.appendChild(script);
 
 // 版权信息
 window.copyright = "©2025 2586300277@qq.com All Rights Reserved.";

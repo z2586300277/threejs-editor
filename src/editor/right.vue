@@ -29,6 +29,15 @@
 
             <div class="control-options">
 
+                <!-- 像素比 -->
+                <div class="pixel-ratio" style="display:flex;align-items:center;gap:8px;">
+                    <el-icon style="color:#a8d4fd;">
+                        <ScaleToOriginal />
+                    </el-icon>
+                    <span style="color:#e5eaf3;">像素比</span>
+                    <el-input-number v-model="pixelRatio" :min="0.5" :max="3" :step="0.5"></el-input-number>
+                </div>
+
                 <!-- logarithmicDepthBuffer 选项 -->
                 <el-checkbox v-model="logbuffer">
                     <div class="option-label">
@@ -126,10 +135,22 @@ const toggleAxes = (val) => {
     threeEditor.handler.helpers.axes.showAxes = val
 }
 
+// 像素比设置
+const pixelRatio = ref(1)
+if (localStorage.getItem('new_threeEditor_pixelRatio')) pixelRatio.value = parseFloat(localStorage.getItem('new_threeEditor_pixelRatio'))
+watch(pixelRatio, (val) => {
+    localStorage.setItem('new_threeEditor_pixelRatio', val)
+    setTimeout(() => {
+        window.location.reload()
+    }, 500);
+})
+
 // 外部链接数据
 const externalLinks = reactive([
     { name: '素材库', url: 'https://z2586300277.github.io/3d-file-server/link.html', icon: 'Collection' },
     { name: '官方示例', url: 'https://openthree.github.io/three-official-examples/#/example', icon: 'Document' },
+    { name: 'Npm内核', url: 'https://www.npmjs.com/package/three-edit-cores', icon: 'Box' },
+    { name: '联系方式', url: 'https://z2586300277.github.io/personalCode.html' , icon: 'ChatDotRound' },
 
 ])
 
@@ -284,5 +305,4 @@ defineExpose({
     flex: 1;
     min-width: 100px;
 }
-
 </style>

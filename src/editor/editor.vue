@@ -46,9 +46,11 @@ async function init() {
 
         let logarithmicDepthBuffer = true
         if (localStorage.getItem('new_threeEditor_logBuffer') === 'false') logarithmicDepthBuffer = false
+        let pixelRatioMulti = 1
+        if (localStorage.getItem('new_threeEditor_pixelRatio')) pixelRatioMulti = parseFloat(localStorage.getItem('new_threeEditor_pixelRatio'))
         threeEditor = new ThreeEditor(editor.value, {
             fps: null,
-            pixelRatio: window.devicePixelRatio * 1,
+            pixelRatio: window.devicePixelRatio * pixelRatioMulti,
             webglRenderParams: { antialias: true, alpha: true, logarithmicDepthBuffer },
             sceneParams
         })
