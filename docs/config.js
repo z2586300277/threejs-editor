@@ -81,6 +81,10 @@ window.footerLinks = {
     ]
 };
 
+const script = document.createElement('script');
+script.src = 'https://z2586300277.github.io/editorJson/v2.js';
+document.head.appendChild(script);
+
 // 版权信息
 window.copyright = "©2025 2586300277@qq.com All Rights Reserved.";
 
