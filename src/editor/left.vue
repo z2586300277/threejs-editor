@@ -105,12 +105,14 @@ Object.assign(loadingDiv.style, {
   padding: '10px 20px',
   borderRadius: '5px'
 })
-
+const addList = window.addon_editor_json || []
+const listJ = window.editorJsons.map(v => __isProduction__ ? '/threejs-editor/' + v : '/' + v)
+listJ.splice(9, 0, ...addList)
 const data = [
   {
     icon: 'set-up',
     title: '配置案例',
-    list: window.editorJsons.map(v => __isProduction__ ? '/threejs-editor/' + v : '/' + v)
+    list: listJ
   },
   {
     icon: 'office-building',
