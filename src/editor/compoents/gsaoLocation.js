@@ -49,17 +49,40 @@ export default {
             while (m.parent && m.parent !== group) m = m.parent
             effectComposer.effectPass.outlinePass.selectedObjects = [m]
 
-            gsap.to(controls.target, {
-                x: m.position.x,
-                y: m.position.y,
-                z: m.position.z
-            })
+            // 计算模型包围盒
+            const box = new THREE.Box3().setFromObject(m);
+            const size = new THREE.Vector3();
+            const center = new THREE.Vector3();
+            box.getSize(size);
+            box.getCenter(center);
 
-            gsap.to(controls.object.position, {
-                x: m.position.x + 20,
-                y: m.position.y + 20,
-                z: m.position.z + 20,
-            })
+            // 计算相机距离，使模型完整显示
+            const maxSize = Math.max(size.x, size.y, size.z);
+            const fov = controls.object.fov || 50;
+            const camera = controls.object;
+            const aspect = camera.aspect || 1.5;
+            const fitHeightDistance = maxSize / (2 * Math.tan(THREE.MathUtils.degToRad(fov / 2)));
+            const fitWidthDistance = maxSize / (2 * Math.tan(THREE.MathUtils.degToRad(fov / 2))) / aspect;
+            const distance = Math.max(fitHeightDistance, fitWidthDistance) * 1.5;
+
+            // 计算新的相机位置（从当前相机方向看向目标中心）
+            const dir = new THREE.Vector3();
+            camera.getWorldDirection(dir);
+            dir.normalize().negate(); // 反向
+            const newPos = center.clone().add(dir.multiplyScalar(distance));
+
+            // 动画移动 controls.target 和 camera.position
+            gsap.to(controls.target, {
+                x: center.x,
+                y: center.y,
+                z: center.z
+            });
+
+            gsap.to(camera.position, {
+                x: newPos.x,
+                y: newPos.y,
+                z: newPos.z
+            });
             m.label.visible = true
 
 

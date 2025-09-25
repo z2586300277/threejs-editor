@@ -326,7 +326,7 @@ const create = (_, { scene }) => {
     // 点击播放
     const container = document.createElement('div');
     container.className = 'label';
-    container.textContent = '点击播放';
+    container.textContent = '🍃点击播放';
     container.style.cursor = 'pointer';
     container.style.pointerEvents = 'auto';
     container.addEventListener('click', () => {
@@ -335,9 +335,9 @@ const create = (_, { scene }) => {
 
     // 点击暂停
     const span = document.createElement('span');
-    span.textContent = ' / 点击暂停';
+    span.textContent = ' / 🍁点击暂停';
     span.style.cursor = 'pointer';
-    span.style.pointerEvents = 'auto';
+    span.style.pointerEvents = 'auto'
     span.addEventListener('click', (event) => {
         event.stopPropagation();
         pause();
@@ -346,7 +346,7 @@ const create = (_, { scene }) => {
     container.appendChild(span);
     
     const css2dObj = new CSS2DObject(container);
-    css2dObj.position.set(0, 4, 0);
+    css2dObj.position.set(0, 3, 0);
     mesh.add(css2dObj);
 
     mesh.REMOVECALL = function () {
