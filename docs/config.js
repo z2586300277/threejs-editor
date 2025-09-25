@@ -6,6 +6,7 @@ window.editorJsons = [
     'editorJson/行政区.json',
     'editorJson/草原追逐.json',
     'editorJson/coffee.json',
+    'editorJson/组合场景视角切换.json',
     'editorJson/燃烧城市.json',
     'editorJson/B站视频配置.json',
     'editorJson/音乐.json',
