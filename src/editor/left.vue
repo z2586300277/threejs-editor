@@ -260,7 +260,7 @@ const dragAdd = (e, v) => {
   padding: 4px;
   box-sizing: border-box;
   display: grid;
-  grid-template-rows: repeat(auto-fit, 80px);
+  grid-auto-rows: 80px;
   grid-template-columns: repeat(2, 1fr);
   overflow: scroll;
   height: 100%;
