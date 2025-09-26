@@ -13,11 +13,19 @@ export default {
         var option;
         
         option = {
-          backgroundColor: 'rgba(255, 255, 255, 0.8)',
+          // 与 lineCharts 保持一致的暗色透明背景与配色
+          backgroundColor: 'transparent',
+          color: ['#80FFA5', '#00DDFF', '#37A2FF'],
           tooltip: {
             trigger: 'axis',
             axisPointer: {
               type: 'shadow'
+            }
+          },
+          legend: {
+            data: ['销售额'],
+            textStyle: {
+              color: 'rgba(255, 255, 255, 0.8)'
             }
           },
           grid: {
@@ -34,17 +42,20 @@ export default {
             },
             axisLine: {
               lineStyle: {
-                color: '#999'
+                color: 'rgba(255, 255, 255, 0.8)'
               }
+            },
+            axisLabel: {
+              color: 'rgba(255, 255, 255, 0.8)'
             }
           },
           yAxis: {
             type: 'value',
             splitLine: {
-              lineStyle: {
-                type: 'dashed',
-                color: '#DDD'
-              }
+              show: false
+            },
+            axisLabel: {
+              color: 'rgba(255, 255, 255, 0.8)'
             }
           },
           series: [
@@ -56,17 +67,17 @@ export default {
               itemStyle: {
                 borderRadius: [4, 4, 0, 0],
                 color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                  { offset: 0, color: '#83bff6' },
-                  { offset: 0.5, color: '#188df0' },
-                  { offset: 1, color: '#188df0' }
+                  { offset: 0, color: '#37A2FF' },
+                  { offset: 0.5, color: '#00DDFF' },
+                  { offset: 1, color: 'rgba(0, 221, 255, 0.4)' }
                 ])
               },
               emphasis: {
                 itemStyle: {
                   color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                    { offset: 0, color: '#2378f7' },
-                    { offset: 0.7, color: '#2378f7' },
-                    { offset: 1, color: '#83bff6' }
+                    { offset: 0, color: '#00DDFF' },
+                    { offset: 0.7, color: '#00DDFF' },
+                    { offset: 1, color: '#80FFA5' }
                   ])
                 }
               }
@@ -76,7 +87,16 @@ export default {
         
         option && myChart.setOption(option);
 
+        // 与 lineCharts 一致的可编辑交互流程
+        container.addEventListener('click', (event) => {
+          container.style.pointerEvents = 'none';
+          transformControls.attach(mesh);
+        });
+
         const mesh = new CSS2DObject(container);
+        mesh.ADDCALL = function () {
+          container.style.pointerEvents = 'auto';
+        }
         return mesh;
     },
 };

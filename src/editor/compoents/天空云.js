@@ -66,6 +66,7 @@ export default {
             fragmentShader: fs,
             depthWrite: false,
             depthTest: false,
+            side: THREE.DoubleSide,
             transparent: true,
         });
 
