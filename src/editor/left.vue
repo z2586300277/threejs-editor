@@ -105,7 +105,12 @@ Object.assign(loadingDiv.style, {
   padding: '10px 20px',
   borderRadius: '5px'
 })
-const addList = window.addon_editor_json || []
+let addList = window.addon_editor_json || []
+if(addList.length) localStorage.setItem('newEditor_addon_editor_json', JSON.stringify(addList))
+else {
+  const local_addon = localStorage.getItem('newEditor_addon_editor_json')
+  if(local_addon) addList = JSON.parse(local_addon)
+}
 const listJ = window.editorJsons.map(v => __isProduction__ ? '/threejs-editor/' + v : '/' + v)
 listJ.splice(9, 0, ...addList)
 const data = [

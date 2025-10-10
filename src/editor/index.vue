@@ -198,6 +198,13 @@ if (route.query.sceneName) {
     namePreviewScene = true
     const sn = 'editorJson/' + route.query.sceneName + '.json'
     window.editorPreviewSceneUrl = __isProduction__ ? '/threejs-editor/' + sn : '/' + sn
+    
+    const local_addon = localStorage.getItem('newEditor_addon_editor_json')
+    if(local_addon) {
+      const addList = JSON.parse(local_addon)
+      const matchLink = addList.find(v => v.includes(route.query.sceneName + '.json'))
+      if(matchLink) window.editorPreviewSceneUrl = matchLink
+    } 
 }
 
 const rightPanel = ref(null)
