@@ -1,4 +1,31 @@
 <template>
+    <div style="margin-top: 10px;">
+        <span class="group-title"> &nbsp;&nbsp; &nbsp;&nbsp;场景树 </span> 
+        <div class="divider"></div>
+    </div>
+    <div class="scene-tree">
+        <div v-for="value,k in sceneObjList" class="item"
+            :key="k">
+            <el-icon v-if="value.children.length" class="coin" style="font-size:16px;">
+                <ArrowRightBold />&nbsp;
+            </el-icon>
+            <el-icon class="coin" @click="value.visible = !value.visible">
+                <View v-show="value.visible" />
+                <Hide v-show="!value.visible" />
+            </el-icon> 
+            &nbsp;&nbsp;    
+            <div class="text" @click="selectObj(value)">{{ value.name || value.type }} </div>
+           <div class="del">
+              <el-popconfirm title="确定删除？" @confirm="delI(value)">
+                <template #reference>
+                    <el-icon class="coin">
+                        <Delete />
+                    </el-icon>
+                </template>
+            </el-popconfirm>
+           </div>
+        </div>
+    </div>
     <div class="skyList">
         <!-- 下拉菜单替换原有标题 -->
         <div class="control-header">
@@ -22,19 +49,19 @@
     <!-- 简化后的辅助工具控制面板 -->
     <div class="helper-controls">
         <div class="control-group">
-            <div class="group-header">
+            <!-- <div class="group-header">
                 <span class="group-title">场景选项</span>
                 <div class="divider"></div>
-            </div>
+            </div> -->
 
             <div class="control-options">
 
                 <!-- 像素比 -->
-                <div class="pixel-ratio" style="display:flex;align-items:center;gap:8px;">
+                <div class="pixel-ratio" style="display:flex;align-items:center;gap: 2px;">
                     <el-icon style="color:#a8d4fd;">
                         <ScaleToOriginal />
                     </el-icon>
-                    <span style="color:#e5eaf3;">像素比</span>
+                    <span style="color:#e5eaf3;font-size: 14px;">&nbsp;像素比&nbsp;&nbsp;</span>
                     <el-input-number v-model="pixelRatio" :min="0.5" :max="3" :step="0.5"></el-input-number>
                 </div>
 
@@ -90,8 +117,10 @@
 </template>
 
 <script setup>
-import { computed, reactive, ref, watch } from 'vue'
-import { Grid, ScaleToOriginal, Histogram } from '@element-plus/icons-vue'
+import { computed, reactive, ref, shallowReactive, watch } from 'vue'
+import { Grid, ScaleToOriginal, Histogram, View, Hide, Delete, ArrowRightBold} from '@element-plus/icons-vue'
+
+const sceneObjList = reactive([])
 
 const selectedSet = ref('蓝天')
 const datalist = reactive([
@@ -172,18 +201,59 @@ defineExpose({
     helperConf(tr) {
         showGrid.value = tr.handler.helpers.grid.showGrid
         showAxes.value = tr.handler.helpers.axes.showAxes
+    },
+    startEditor(te) {
+        const { scene } = te
+        const push_obj = args => {
+            args.map(obj => {
+             ['PerspectiveCamera','AxesHelper','GridHelper','Box3Helper'].indexOf(obj.type) === -1 && sceneObjList.unshift(obj)
+            })
+        }
+        push_obj(scene.children.filter(c => {
+            if(c.isTransformControlsRoot) return false
+            return true
+        }))
+        const sceneAdd = scene.add
+        scene.add = function (...args) {
+            args.forEach(obj => {
+                 push_obj([obj])
+            })
+            sceneAdd.apply(this, args)
+        }
+        const sceneRemove = scene.remove
+        scene.remove = function (...args) {
+            args.forEach(obj => {
+                const index = sceneObjList.indexOf(obj)
+                if (index > -1) {
+                    sceneObjList.splice(index, 1)
+                }
+            })
+            sceneRemove.apply(this, args)
+        }
     }
 });
+
+function selectObj(item) {
+   try {
+     if(item.visible == false) return
+     threeEditor.transformControls.attach(item)
+   }
+    catch (error) {}
+}
+
+function delI(item) {
+    const i = threeEditor.scene.children.find(c => c.id === item.id)
+    threeEditor.scene.remove(i)
+}
 </script>
 
 <style lang="less" scoped>
 .skyList {
     width: 100%;
-    height: 33%;
     display: flex;
     flex-direction: column;
     gap: 10px;
-    padding: 10px;
+    padding: 0px 10px 0px 10px;
     box-sizing: border-box;
 }
 
@@ -206,7 +276,7 @@ defineExpose({
 
 .resource {
     display: grid;
-    height: calc(100% - 20px);
+    height: 130px;
     width: 100%;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(2, 1fr);
@@ -230,7 +300,7 @@ defineExpose({
 .control-group {
     background-color: rgba(30, 30, 30, 0.6);
     border-radius: 8px;
-    padding: 12px;
+    padding: 0px 12px 12px 12px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
@@ -259,7 +329,7 @@ defineExpose({
 .control-options {
     display: flex;
     flex-wrap: wrap;
-    gap: 15px;
+    gap: 5px;
 }
 
 .option-label {
@@ -281,7 +351,7 @@ defineExpose({
 }
 
 .external-links {
-    margin-top: 20px;
+    // margin-top: 20px;
     width: 100%;
     padding: 0 10px;
     box-sizing: border-box;
@@ -304,5 +374,45 @@ defineExpose({
     transition: all 0.3s;
     flex: 1;
     min-width: 100px;
+}
+
+.scene-tree {
+    width: 100%;
+    box-sizing: border-box;
+    height: 180px;
+    font-size: 12px;
+    display: grid;
+    grid-auto-rows: 30px;
+    align-items: center;
+    margin-top: 5px;
+    // justify-content: center;
+    padding: 2px 30px 5px 20px;
+    overflow: scroll;
+    .text {
+        &:hover {
+            color: #99ceff;
+            transition: all 0.5s;
+        }
+    }
+    .item {
+        display: flex;
+        height: 100%;
+        align-items: center;
+        cursor: pointer;
+    }
+    .coin {
+        :hover {
+            color: #99ceff;
+            font-weight: bold;
+            transition: all 0.5s;
+        }
+    }
+    .del {
+        //   flex end 
+        flex: 1;
+        display: flex;
+        justify-content: flex-end;
+        
+    }
 }
 </style>
