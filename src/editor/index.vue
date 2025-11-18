@@ -257,6 +257,7 @@ const openPanel = () => threeEditor.openControlPanel()
 
 const emitThreeEditor = (threeEditor) => {
   rightPanel.value.helperConf(threeEditor)
+  rightPanel.value.startEditor(threeEditor)
   window.threeEditor = threeEditor
   openKeyEnable.value = threeEditor.handler.openKeyEnable
   rightClickMenusEnable.value = threeEditor.handler.rightClickMenusEnable
