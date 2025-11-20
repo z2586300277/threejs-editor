@@ -151,7 +151,7 @@ const readmeFn = function () {
         .footer-links a {
             color: #cbe3f9ff;
             text-decoration: none;
-            font-size: 16px;
+            font-size: 15px;
             transition: all 0.3s;
             padding: 5px 10px;
             border-radius: 4px;

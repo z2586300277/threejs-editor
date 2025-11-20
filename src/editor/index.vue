@@ -194,6 +194,7 @@ import { useRoute, useRouter } from 'vue-router'
 const route = useRoute()
 const router = useRouter()
 let namePreviewScene = false
+if(route.query?.undark) document.getElementsByTagName('html')[0].classList.remove('dark')
 if (route.query.sceneName) {
     namePreviewScene = true
     const sn = 'editorJson/' + route.query.sceneName + '.json'

@@ -177,10 +177,9 @@ watch(pixelRatio, (val) => {
 // 外部链接数据
 const externalLinks = reactive([
     { name: '素材库', url: 'https://z2586300277.github.io/3d-file-server/link.html', icon: 'Collection' },
+    { name: '联系方式', url: 'https://z2586300277.github.io/personalCode.html' , icon: 'ChatDotRound' },
     { name: '官方示例', url: 'https://openthree.github.io/three-official-examples/#/example', icon: 'Document' },
     { name: 'Npm内核', url: 'https://www.npmjs.com/package/three-edit-cores', icon: 'Box' },
-    { name: '联系方式', url: 'https://z2586300277.github.io/personalCode.html' , icon: 'ChatDotRound' },
-
 ])
 
 // 打开外部链接
@@ -223,7 +222,7 @@ defineExpose({
         const sceneRemove = scene.remove
         scene.remove = function (...args) {
             args.forEach(obj => {
-                const index = sceneObjList.indexOf(obj)
+                const index = sceneObjList.findIndex(i => i.id === obj.id)
                 if (index > -1) {
                     sceneObjList.splice(index, 1)
                 }
@@ -236,7 +235,8 @@ defineExpose({
 function selectObj(item) {
    try {
      if(item.visible == false) return
-     threeEditor.transformControls.attach(item)
+     const i = threeEditor.scene.children.find(c => c.id === item.id)
+     threeEditor.transformControls.attach(i)
    }
     catch (error) {}
 }
@@ -311,7 +311,7 @@ function delI(item) {
 }
 
 .group-title {
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 500;
     color: #a8d4fd;
     margin-bottom: 8px;
