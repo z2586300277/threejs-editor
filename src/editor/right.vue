@@ -177,9 +177,11 @@ watch(pixelRatio, (val) => {
 // 外部链接数据
 const externalLinks = reactive([
     { name: '素材库', url: 'https://z2586300277.github.io/3d-file-server/link.html', icon: 'Collection' },
-    { name: '联系方式', url: 'https://z2586300277.github.io/personalCode.html' , icon: 'ChatDotRound' },
+    { name: '留言联系', url: 'https://z2586300277.github.io/message.html' , icon: 'ChatDotRound' },
     { name: '官方示例', url: 'https://openthree.github.io/three-official-examples/#/example', icon: 'Document' },
     { name: 'Npm内核', url: 'https://www.npmjs.com/package/three-edit-cores', icon: 'Box' },
+    { name: '定制开发', url: 'https://www.goofish.com/personal?userId=2885508577', icon: 'Promotion' },
+    { name: '赞赏', url: 'https://z2586300277.github.io/sponsor.html', icon: 'StarFilled' }
 ])
 
 // 打开外部链接
@@ -252,7 +254,7 @@ function delI(item) {
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 5px;
     padding: 0px 10px 0px 10px;
     box-sizing: border-box;
 }
@@ -276,7 +278,7 @@ function delI(item) {
 
 .resource {
     display: grid;
-    height: 130px;
+    height: 120px;
     width: 100%;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(2, 1fr);

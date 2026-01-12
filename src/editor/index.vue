@@ -22,7 +22,8 @@
             </el-option>
           </el-select>
           <el-button class="btn-add" link icon="plus" @click="dialogVisible = true">新建场景</el-button>
-          <el-button class="btn-add" link icon="Upload" @click="loadModelUrl">线上导入</el-button>
+          <el-upload class="upload" ref="myUpload" :auto-upload="false" action="" :on-change="uploadChange">
+            <el-button class="btn-add" link icon="Upload">本地导入</el-button></el-upload>
           <el-dialog v-model="dialogVisible" title="命名场景" width="500">
             <el-input v-model="inputSceneName" placeholder="请输入场景名称" />
             <template #footer>
@@ -37,7 +38,7 @@
         </div>
         <div class="title">
           <el-link style="font-size: 17px;"
-            @click="openUrl('https://z2586300277.github.io/')">🏠作者主页</el-link>&nbsp;&nbsp;
+            @click="openUrl('https://z2586300277.github.io/')">🏠作者官网</el-link>&nbsp;&nbsp;
           <el-link style="font-size: 17px;"
             @click="openUrl('https://z2586300277.github.io/three-editor/dist/#/editor')">🍁旧编辑器</el-link>&nbsp;&nbsp;
           - &nbsp;
@@ -50,8 +51,7 @@
             style="font-size: 17px;">🌳组件开发</el-link>
         </div>
         <div class="header-right">
-          <el-upload class="upload" ref="myUpload" :auto-upload="false" action="" :on-change="uploadChange">
-                <el-button class="btn-add" link icon="Upload">本地导入</el-button></el-upload>
+          <el-button class="btn-add" link icon="Upload" @click="loadModelUrl">线上导入</el-button>
           <el-button class="btn-add" link icon="Document" @click="exportTemplateJson">导出</el-button>
           <el-button @click="pict" icon="camera"></el-button>
           <el-button @click="openPanel">控制板</el-button>
