@@ -22,7 +22,7 @@
             </el-option>
           </el-select>
           <el-button class="btn-add" link icon="plus" @click="dialogVisible = true">新建场景</el-button>
-          <el-button class="btn-add" link icon="Upload" @click="loadModelUrl">导入模型</el-button>
+          <el-button class="btn-add" link icon="Upload" @click="loadModelUrl">线上导入</el-button>
           <el-dialog v-model="dialogVisible" title="命名场景" width="500">
             <el-input v-model="inputSceneName" placeholder="请输入场景名称" />
             <template #footer>
@@ -50,6 +50,8 @@
             style="font-size: 17px;">🌳组件开发</el-link>
         </div>
         <div class="header-right">
+          <el-upload class="upload" ref="myUpload" :auto-upload="false" action="" :on-change="uploadChange">
+                <el-button class="btn-add" link icon="Upload">本地导入</el-button></el-upload>
           <el-button class="btn-add" link icon="Document" @click="exportTemplateJson">导出</el-button>
           <el-button @click="pict" icon="camera"></el-button>
           <el-button @click="openPanel">控制板</el-button>
@@ -183,13 +185,25 @@
 </template>
 
 <script setup>
-import { reactive, ref, watch } from 'vue'
-import Editor from './editor.vue'
+import { defineAsyncComponent, reactive, ref, watch } from 'vue'
+import EditorVue from './editor.vue'
 import { ElButton, ElSelect, ElOption, ElMessage, ElIcon } from 'element-plus'
 import { Pointer, Position, RefreshRight, ZoomIn, Remove  } from '@element-plus/icons-vue'
 import LeftPanel from './left.vue'
 import RightPanel from './right.vue'
 import { useRoute, useRouter } from 'vue-router'
+import { setIndexDB } from './indexDb'
+import { getObjectViews, createGsapAnimation } from './lib'
+
+window.threeEditorDB = { db: null , list: []}
+const Editor = defineAsyncComponent(() => {
+    return setIndexDB().then(async res => {
+        const { data } = await res.getAllRequest()
+        window.threeEditorDB.db = res
+        window.threeEditorDB.list = data
+        return EditorVue
+    }).catch(() => EditorVue)
+})
 
 const route = useRoute()
 const router = useRouter()
@@ -330,6 +344,28 @@ function shareLink() {
   const sceneName = window.currentOnlineSceneName || ''
   window.open(router.resolve({ path: '/editor', query: { sceneName } }).href, '_blank')
 }
+
+const myUpload = ref(null)
+const uploadChange = file => {
+    const [_, end] = file.name.split('.')
+    myUpload.value.clearFiles()
+    if (!['fbx', 'glb', 'FBX', 'GLB'].includes(end)) return ElMessage.error('请上传fbx或glb格式的模型')
+    const url = URL.createObjectURL(file.raw)
+    window.threeEditorDB.db.getRequest(file.name, url).then(res => {
+        const rootInfo = { url: res.url, type: end.toLocaleUpperCase() === 'GLB' ? 'GLTF' : end.toLocaleUpperCase(), threeEditorDBNameUrl: 'IndexDB:' + file.name }
+        const { loaderService } = threeEditor.modelCores.loadModel(rootInfo)
+        loaderService.complete = m => {
+            const { transformControls, camera, controls } = threeEditor
+            const { maxView, target } = getObjectViews(m)
+            Promise.all([createGsapAnimation(camera.position, maxView), createGsapAnimation(controls.target, target)]).then(() => {
+                threeEditor.setOutlinePass([m])
+                controls.target.copy(target)
+                transformControls.attach(m)
+            })
+        }
+    })
+}
+
 </script>
 
 <style lang="less" scoped>
@@ -378,6 +414,7 @@ function shareLink() {
 
   &-right {
     display: flex;
+    align-items: center;
     justify-content: flex-end;
   }
 }
@@ -592,4 +629,11 @@ function shareLink() {
     color: #cccccc;
   }
 }
+
+.upload {
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
 </style>

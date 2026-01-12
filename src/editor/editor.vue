@@ -24,7 +24,7 @@ watch(() => dataCores.sceneName, (val) => {
     params = JSON.parse(params) || tamplateJson
     
     try {
-        threeEditor.resetEditorStorage(params)
+        threeEditor.resetEditorStorage(changeDBModelUrl(params))
     } catch (error) {
         localStorage.removeItem(val + '-newEditor')
     }
@@ -52,7 +52,7 @@ async function init() {
             fps: null,
             pixelRatio: window.devicePixelRatio * pixelRatioMulti,
             webglRenderParams: { antialias: true, alpha: true, logarithmicDepthBuffer },
-            sceneParams
+            sceneParams: changeDBModelUrl(sceneParams)
         })
     } catch (error) {
         localStorage.removeItem(dataCores.sceneName + '-newEditor')
@@ -63,6 +63,18 @@ async function init() {
     emits('emitThreeEditor', threeEditor)
     window.addEventListener('resize', () => window.threeEditor?.renderSceneResize?.())
 
+}
+
+function changeDBModelUrl(sceneParams) {
+    sceneParams?.modelCores?.forEach(i => {
+        if (i.modelInfo.threeEditorDBNameUrl) {
+            const [_, name] = i.modelInfo.threeEditorDBNameUrl.split(':')
+            const item = window.threeEditorDB.list.find(i => i.name === name)
+            if (item) i.modelInfo.url = URL.createObjectURL(item.blob)
+            else sceneParams.modelCores.splice(sceneParams.modelCores.indexOf(i), 1)
+        }
+    })
+    return sceneParams
 }
 
 onMounted(() => init())
