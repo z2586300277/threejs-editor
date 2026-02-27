@@ -10,14 +10,14 @@ export default {
         // 可配置参数
         const config = {
             particleCount: 3000,
-            particleSize: 1.2,
+            particleSize: 3,
             width: 12,
-            depth: 2,
+            depth: 4,
             height: 15,
             riseSpeed: 0.4,
             spread: 0.3,
             turbulence: 0.3,
-            density: 0.4,
+            density: 0.16,
         }
 
         const uniforms = {
@@ -117,7 +117,7 @@ export default {
         // gui.add(config, 'depth', 0.5, 10).name('喷口深度').onChange(() => { steam.geometry.dispose(); steam.geometry = buildGeometry() })
         // gui.add(config, 'riseSpeed', 0.1, 1).name('上升速度').onChange(() => { steam.geometry.dispose(); steam.geometry = buildGeometry() })
         // gui.add(config, 'particleCount', 500, 8000, 500).name('粒子数量').onChange(() => { steam.geometry.dispose(); steam.geometry = buildGeometry() })
-        // gui.add(config, 'particleSize', 0.3, 3).name('粒子大小').onChange(() => { steam.geometry.dispose(); steam.geometry = buildGeometry() })
+        // gui.add(config, 'particleSize', 0.1, 5).name('粒子大小').onChange(() => { steam.geometry.dispose(); steam.geometry = buildGeometry() })
         // gui.addColor({ color: '#ffffff' }, 'color').name('蒸汽颜色').onChange(v => uniforms.baseColor.value.set(v))
 
 
