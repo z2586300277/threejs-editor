@@ -181,7 +181,7 @@ async function clickLeft(v, point) {
     const design = ThreeEditor.__DESIGNS__.find(d => d.label === v)
     const mesh = await design.create(null, threeEditor, threeEditor)
     if (!mesh) return
-    mesh.isDesignMesh = true
+    mesh.editorType = 'isDesignMesh'
     mesh.designType = design.name
     scene.add(mesh)
     if (point) mesh.position.copy(point)
