@@ -1,5 +1,5 @@
 <template>
-    <div class="edit" ref="editor"> </div>
+    <div class="edit" ref="editor" @dragover.prevent @drop.prevent> </div>
 </template>
 
 <script setup>
