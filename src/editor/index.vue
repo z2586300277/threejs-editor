@@ -146,9 +146,9 @@
           <div class="shortcuts-content" v-show="openKeyEnable">
             <div class="shortcuts-grid">
               <div class="shortcuts-section">
-                <div class="section-title">模式选择</div>
-                <div class="shortcut-row"><span class="key">1</span><span class="desc">变换模式</span></div>
-                <div class="shortcut-row"><span class="key">2</span><span class="desc">选择模式</span></div>
+                <div class="section-title">选择相关</div>
+                <div class="shortcut-row"><span class="key">⬆</span><span class="desc">向上一级</span></div>
+                <div class="shortcut-row"><span class="key">⬇</span><span class="desc">向下一级</span></div>
                 <div class="shortcut-row"><span class="key">Tab</span><span class="desc">变换⟷选择</span></div>
               </div>
               <div class="shortcuts-section">
@@ -167,7 +167,7 @@
                 <div class="section-title">变换操作</div>
                 <div class="shortcut-row"><span class="key">Q,W,E,A,S,D</span><span class="desc">XYZ轴微调</span></div>
                 <div class="shortcut-row"><span class="key">Shift+X/Y/Z</span><span class="desc">轴旋转90度</span></div>
-                <div class="shortcut-row"><span class="key">Z/Y</span><span class="desc">撤销/反撤销</span></div>
+                <div class="shortcut-row"><span class="key">Ctrl+Z/Y</span><span class="desc">撤销/反撤销</span></div>
               </div>
               <div class="shortcuts-section">
                 <div class="section-title">其他操作</div>

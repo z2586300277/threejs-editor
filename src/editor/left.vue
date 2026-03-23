@@ -164,7 +164,7 @@ const loadModel = (url, point) => {
     if(point) model.position.copy(point)
     document.body.removeChild(loadingDiv)
     const { maxView, target } = getObjectViews(model)
-    Promise.all([createGsapAnimation(camera.position, maxView), createGsapAnimation(controls.target, target)]).then(() => {
+    Promise.all([createGsapAnimation(camera.position, maxView, { duration: 0.3 }), createGsapAnimation(controls.target, target, { duration: 0.3 })]).then(() => {
       transformControls.attach(model)
     })
   }
@@ -188,8 +188,8 @@ async function clickLeft(v, point) {
     const { maxView, target } = getObjectViews(mesh)
     //检测是否存在maxView
     if(maxView.x){
-      createGsapAnimation(threeEditor.camera.position, maxView)
-      createGsapAnimation(threeEditor.controls.target, target)
+      createGsapAnimation(threeEditor.camera.position, maxView, { duration: 0.3 })
+      createGsapAnimation(threeEditor.controls.target, target, { duration: 0.3 })
     }
     transformControls.attach(mesh)
   }
