@@ -35,6 +35,8 @@ window.editorJsons = [
     'editorJson/内嵌网页.json',
     'editorJson/车展.json',
     'editorJson/机房.json',
+    'editorJson/灭火.json',
+    'editorJson/奔向洞穴.json',
     'editorJson/标签编辑.json',
     'editorJson/地空盒.json',
     'editorJson/胜利的导弹.json',

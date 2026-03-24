@@ -22,7 +22,8 @@
             </el-option>
           </el-select>
           <el-button class="btn-add" link icon="plus" @click="dialogVisible = true">新建场景</el-button>
-          <el-button class="btn-add" link icon="Upload" @click="loadModelUrl">导入模型</el-button>
+          <el-upload class="upload" ref="myUpload" :auto-upload="false" action="" :on-change="uploadChange">
+            <el-button class="btn-add" link icon="Upload">本地导入</el-button></el-upload>
           <el-dialog v-model="dialogVisible" title="命名场景" width="500">
             <el-input v-model="inputSceneName" placeholder="请输入场景名称" />
             <template #footer>
@@ -36,21 +37,23 @@
           </el-dialog>
         </div>
         <div class="title">
-          <el-link style="font-size: 17px;"
-            @click="openUrl('https://z2586300277.github.io/')">🏠作者主页</el-link>&nbsp;&nbsp;
-          <el-link style="font-size: 17px;"
+          <el-link style="font-size: 16px;"
+            @click="openUrl('https://z2586300277.github.io/')">🏠作者官网</el-link>&nbsp;&nbsp;
+          <el-link style="font-size: 16px;"
             @click="openUrl('https://z2586300277.github.io/three-editor/dist/#/editor')">🍁旧编辑器</el-link>&nbsp;&nbsp;
           - &nbsp;
           <img class="logo" src="/site.png" alt="logo" width="18px" height="18px">
           &nbsp;{{ dataCores.sceneName || ' - - - - ' }}&nbsp;-&nbsp;&nbsp;
           <el-link @click="openUrl('https://z2586300277.github.io/threejs-editor/apply.html')"
-            style="font-size: 17px;">🌾嵌入项目</el-link>
+            style="font-size: 16px;">🌾嵌入项目</el-link>
             &nbsp;&nbsp;
               <el-link @click="openUrl('https://github.com/z2586300277/threejs-editor/tree/main/src/editor/compoents')"
-            style="font-size: 17px;">🌳组件开发</el-link>
+            style="font-size: 16px;">🌳组件开发</el-link>
         </div>
         <div class="header-right">
+          <el-button class="btn-add" link icon="Upload" @click="loadModelUrl">线上导入</el-button>
           <el-button class="btn-add" link icon="Document" @click="exportTemplateJson">导出</el-button>
+          <el-button class="btn-add" link icon="download" @click="exportGLTF">下载</el-button>
           <el-button @click="pict" icon="camera"></el-button>
           <el-button @click="openPanel">控制板</el-button>
           <el-button @click="saveScene">保存</el-button>
@@ -144,16 +147,10 @@
           <div class="shortcuts-content" v-show="openKeyEnable">
             <div class="shortcuts-grid">
               <div class="shortcuts-section">
-                <div class="section-title">模式选择</div>
-                <div class="shortcut-row"><span class="key">1</span><span class="desc">变换模式</span></div>
-                <div class="shortcut-row"><span class="key">2</span><span class="desc">选择模式</span></div>
-                <div class="shortcut-row"><span class="key">Tab</span><span class="desc">变换⟷选择</span></div>
-              </div>
-              <div class="shortcuts-section">
                 <div class="section-title">键盘操作</div>
-                <div class="shortcut-row"><span class="key">Shift+Tab</span><span class="desc">根/子选择切换</span></div>
-                <div class="shortcut-row"><span class="key">↑/↓</span><span class="desc">子选择层级</span></div>
-                <div class="shortcut-row"><span class="key">Alt</span><span class="desc">复制选中</span></div>
+                <div class="shortcut-row"><span class="key">Shift+Tab</span><span class="desc">根/子 切换</span></div>
+                <div class="shortcut-row"><span class="key">↑/↓</span><span class="desc">子 层级</span></div>
+                <div class="shortcut-row"><span class="key">Ctrl+C </span><span class="desc">复制选中</span></div>
               </div>
               <div class="shortcuts-section">
                 <div class="section-title">变换模式</div>
@@ -165,10 +162,11 @@
                 <div class="section-title">变换操作</div>
                 <div class="shortcut-row"><span class="key">Q,W,E,A,S,D</span><span class="desc">XYZ轴微调</span></div>
                 <div class="shortcut-row"><span class="key">Shift+X/Y/Z</span><span class="desc">轴旋转90度</span></div>
-                <div class="shortcut-row"><span class="key">Z/Y</span><span class="desc">撤销/反撤销</span></div>
+                <div class="shortcut-row"><span class="key">Ctrl+Z/Y</span><span class="desc">撤销/反撤销</span></div>
               </div>
               <div class="shortcuts-section">
                 <div class="section-title">其他操作</div>
+                <div class="shortcut-row"><span class="key">Tab</span><span class="desc">变换⟷选择</span></div>
                 <div class="shortcut-row"><span class="key">Del</span><span class="desc">删除</span></div>
                 <div class="shortcut-row"><span class="key">Esc</span><span class="desc">退出操作</span></div>
               </div>
@@ -183,13 +181,27 @@
 </template>
 
 <script setup>
-import { reactive, ref, watch } from 'vue'
-import Editor from './editor.vue'
-import { ElButton, ElSelect, ElOption, ElMessage, ElIcon } from 'element-plus'
+import { defineAsyncComponent, reactive, ref, watch } from 'vue'
+import EditorVue from './editor.vue'
+import { ElButton, ElSelect, ElOption, ElMessage, ElIcon, ElMessageBox } from 'element-plus'
 import { Pointer, Position, RefreshRight, ZoomIn, Remove  } from '@element-plus/icons-vue'
 import LeftPanel from './left.vue'
 import RightPanel from './right.vue'
 import { useRoute, useRouter } from 'vue-router'
+import { setIndexDB } from './indexDb'
+import { getObjectViews, createGsapAnimation } from './lib'
+import * as THREE from 'three'
+import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter.js'
+
+window.threeEditorDB = { db: null , list: []}
+const Editor = defineAsyncComponent(() => {
+    return setIndexDB().then(async res => {
+        const { data } = await res.getAllRequest()
+        window.threeEditorDB.db = res
+        window.threeEditorDB.list = data
+        return EditorVue
+    }).catch(() => EditorVue)
+})
 
 const route = useRoute()
 const router = useRouter()
@@ -330,6 +342,100 @@ function shareLink() {
   const sceneName = window.currentOnlineSceneName || ''
   window.open(router.resolve({ path: '/editor', query: { sceneName } }).href, '_blank')
 }
+
+const myUpload = ref(null)
+const uploadChange = file => {
+    const [_, end] = file.name.split('.')
+    myUpload.value.clearFiles()
+    if (!['fbx', 'glb', 'FBX', 'GLB'].includes(end)) return ElMessage.error('请上传fbx或glb格式的模型')
+    const url = URL.createObjectURL(file.raw)
+    window.threeEditorDB.db.getRequest(file.name, url).then(res => {
+        const rootInfo = { url: res.url, type: end.toLocaleUpperCase() === 'GLB' ? 'GLTF' : end.toLocaleUpperCase(), threeEditorDBNameUrl: 'IndexDB:' + file.name }
+        const { loaderService } = threeEditor.modelCores.loadModel(rootInfo)
+        loaderService.complete = m => {
+            const { transformControls, camera, controls } = threeEditor
+            const { maxView, target } = getObjectViews(m)
+            Promise.all([createGsapAnimation(camera.position, maxView), createGsapAnimation(controls.target, target)]).then(() => {
+                threeEditor.setOutlinePass([m])
+                controls.target.copy(target)
+                transformControls.attach(m)
+            })
+        }
+    })
+}
+
+const exportGLTF = () => {
+  ElMessageBox.confirm('确定要导出当前场景为 GLB 文件吗？', '导出确认', {
+    confirmButtonText: '导出',
+    cancelButtonText: '取消',
+    type: 'info'
+  }).then(() => {
+    doExport()
+  }).catch(() => {})
+}
+
+
+const doExport = () => {
+
+  const { scene } = threeEditor
+  const exportObjects = []
+
+  // 收集场景直接子级中可导出的物体
+  scene.children.map(child => {
+    // 排除不需要导出的对象
+    if (
+      child.isTransformControls ||
+      child.type === 'TransformControls' ||
+      child.type === 'TransformControlsPlane' ||
+      child.isHelper ||
+      child.type.includes('Helper') ||
+      child.type === 'GridHelper' ||
+      child.type === 'AxesHelper' ||
+      child.type === 'CameraHelper' ||
+      child.type === 'DirectionalLightHelper' ||
+      child.type === 'PointLightHelper' ||
+      child.type === 'SpotLightHelper' ||
+      child.type === 'HemisphereLightHelper' ||
+      !child.visible
+    ) return
+
+    // 包含 Mesh、Group、Object3D、Light 等
+    if (child.isMesh || child.isGroup || child.isObject3D || child.isLight || child.isLine || child.isPoints) {
+        if(child.visible) exportObjects.push(child)
+    }
+  })
+
+  if (exportObjects.length === 0) {
+    ElMessage.warning('场景中没有可导出的模型')
+    return
+  }
+
+  console.log('导出对象列表:', exportObjects)
+
+  // 创建临时场景用于导出
+  const exportScene = new THREE.Scene()
+  exportObjects.forEach(obj => exportScene.add(obj.clone(true)))
+
+  const exporter = new GLTFExporter()
+  exporter.parse(
+    exportScene,
+    (result) => {
+      const isBuffer = result instanceof ArrayBuffer
+      const blob = new Blob(
+        [isBuffer ? result : JSON.stringify(result, null, 2)],
+        { type: isBuffer ? 'model/gltf-binary' : 'model/gltf+json' }
+      )
+      const link = document.createElement('a')
+      link.href = URL.createObjectURL(blob)
+      link.download = `${dataCores.sceneName}.glb`
+      link.click()
+      URL.revokeObjectURL(link.href)
+      ElMessage.success(`导出成功`)
+    },
+    (error) => ElMessage.error('导出失败: ' + error.message),
+    { binary: true, embedImages: true, includeCustomExtensions: true }
+  )
+}
 </script>
 
 <style lang="less" scoped>
@@ -378,6 +484,7 @@ function shareLink() {
 
   &-right {
     display: flex;
+    align-items: center;
     justify-content: flex-end;
   }
 }
@@ -554,7 +661,7 @@ function shareLink() {
 
 .shortcuts-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 10px;
 }
 
@@ -592,4 +699,11 @@ function shareLink() {
     color: #cccccc;
   }
 }
+
+.upload {
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
 </style>

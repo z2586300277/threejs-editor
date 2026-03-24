@@ -9,9 +9,12 @@
     </div>
 
     <div class="content-panel">
+      <div class="search-box">
+        <el-input v-model="searchText" placeholder="搜索..." clearable size="small" />
+      </div>
       <div class="build">
-        <div class="back" v-for="i in showList">
-          <div class="item" draggable="true" @dragend="e => dragAdd(e, i)"> 
+        <div class="back" v-for="i in filteredList">
+          <div class="item" draggable="true" @dragend="e => dragAdd(e, i)">
             <el-link @click="clickLeft(i)">
               {{ i.split('/').pop() }}
             </el-link>
@@ -23,7 +26,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { ThreeEditor, getObjectViews, createGsapAnimation } from './lib'
 import * as THREE from 'three';
 
@@ -134,10 +137,20 @@ const data = [
 const activeLocal = localStorage.getItem('new_active')
 const showList = ref(data.find(v => v.title === activeLocal)?.list || data[0].list);
 const active = ref(activeLocal || data[0].title);
+const searchText = ref('');
+
+const filteredList = computed(() => {
+  if (!searchText.value) return showList.value;
+  return showList.value.filter(item =>
+    item.split('/').pop().toLowerCase().includes(searchText.value.toLowerCase())
+  );
+});
+
 function setActive(item) {
   localStorage.setItem('new_active', item.title);
   active.value = item.title;
   showList.value = item.list;
+  searchText.value = '';
 }
 
 const loadScene = (v) => fetch(v).then(res => res.json()).then(res => threeEditor?.resetEditorStorage(res))
@@ -151,7 +164,7 @@ const loadModel = (url, point) => {
     if(point) model.position.copy(point)
     document.body.removeChild(loadingDiv)
     const { maxView, target } = getObjectViews(model)
-    Promise.all([createGsapAnimation(camera.position, maxView), createGsapAnimation(controls.target, target)]).then(() => {
+    Promise.all([createGsapAnimation(camera.position, maxView, { duration: 0.3 }), createGsapAnimation(controls.target, target, { duration: 0.3 })]).then(() => {
       transformControls.attach(model)
     })
   }
@@ -168,15 +181,15 @@ async function clickLeft(v, point) {
     const design = ThreeEditor.__DESIGNS__.find(d => d.label === v)
     const mesh = await design.create(null, threeEditor, threeEditor)
     if (!mesh) return
-    mesh.isDesignMesh = true
+    mesh.editorType = 'isDesignMesh'
     mesh.designType = design.name
     scene.add(mesh)
     if (point) mesh.position.copy(point)
     const { maxView, target } = getObjectViews(mesh)
     //检测是否存在maxView
     if(maxView.x){
-      createGsapAnimation(threeEditor.camera.position, maxView)
-      createGsapAnimation(threeEditor.controls.target, target)
+      createGsapAnimation(threeEditor.camera.position, maxView, { duration: 0.3 })
+      createGsapAnimation(threeEditor.controls.target, target, { duration: 0.3 })
     }
     transformControls.attach(mesh)
   }
@@ -259,6 +272,14 @@ const dragAdd = (e, v) => {
 .content-panel {
   flex: 1;
   overflow: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.search-box {
+  padding: 10px;
+  border-bottom: 1px solid #3e3e3e;
+  background-color: #1e1e1e;
 }
 
 .build {
