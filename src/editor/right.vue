@@ -1,6 +1,6 @@
 <template>
     <div style="margin-top: 10px;">
-        <span class="group-title"> &nbsp;&nbsp; &nbsp;&nbsp;场景树 </span> 
+        <span class="group-title"> &nbsp;&nbsp; &nbsp;&nbsp;场景树 <el-button title="清理缓存" link style="margin-right: 20px;" :icon="Brush" @click="clear"></el-button></span> 
         <div class="divider"></div>
     </div>
     <div class="scene-tree">
@@ -118,7 +118,8 @@
 
 <script setup>
 import { computed, reactive, ref, shallowReactive, watch } from 'vue'
-import { Grid, ScaleToOriginal, Histogram, View, Hide, Delete, ArrowRightBold} from '@element-plus/icons-vue'
+import { Grid, ScaleToOriginal, Histogram, View, Hide, Delete, ArrowRightBold, Brush} from '@element-plus/icons-vue'
+import { ElMessageBox, ElMessage } from 'element-plus'
 
 const sceneObjList = reactive([])
 
@@ -177,11 +178,11 @@ watch(pixelRatio, (val) => {
 // 外部链接数据
 const externalLinks = reactive([
     { name: '素材库', url: 'https://z2586300277.github.io/3d-file-server/link.html', icon: 'Collection' },
-    { name: '留言联系', url: 'https://z2586300277.github.io/message.html' , icon: 'ChatDotRound' },
-    { name: '官方示例', url: 'https://openthree.github.io/three-official-examples/#/example', icon: 'Document' },
     { name: 'Npm内核', url: 'https://www.npmjs.com/package/three-edit-cores', icon: 'Box' },
     { name: '定制开发', url: 'https://www.goofish.com/personal?userId=2885508577', icon: 'Promotion' },
-    { name: '赞赏', url: 'https://z2586300277.github.io/sponsor.html', icon: 'StarFilled' }
+    { name: '赞赏', url: 'https://z2586300277.github.io/sponsor.html', icon: 'StarFilled' },
+    { name: 'B站', url: 'https://space.bilibili.com/245165721' , icon: 'ChatDotRound' },
+    { name: '交流群', url: 'https://z2586300277.github.io/personalCode.html', icon: 'Document' },
 ])
 
 // 打开外部链接
@@ -246,6 +247,26 @@ function selectObj(item) {
 function delI(item) {
     const i = threeEditor.scene.children.find(c => c.id === item.id)
     threeEditor.scene.remove(i)
+}
+
+function clear() {
+    ElMessageBox.confirm('确定要清理所有缓存吗？这将清除浏览器存储的 localStorage、sessionStorage 和 IndexedDB 数据，页面将自动刷新。', '清理缓存', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+    }).then(() => {
+        // 清除 localStorage
+        localStorage.clear()
+        // 清除 sessionStorage
+        sessionStorage.clear()
+        // 清除 IndexedDB
+        window.indexedDB.deleteDatabase('new_threeEditor_db')
+        ElMessage({
+            type: 'success',
+            message: '缓存已清理，页面即将刷新',
+        })
+        setTimeout(() => window.location.reload(), 1000)
+    }).catch(() => {})
 }
 </script>
 
