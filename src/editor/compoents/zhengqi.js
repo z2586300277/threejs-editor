@@ -139,6 +139,7 @@ export default {
         if (storage?.params) Object.assign(params, storage.params);
 
         const steam = new Steam(params);
+        steam.disBlendShader = true;
         scene.addUpdateListener(() => steam.update());
         return steam;
     },
