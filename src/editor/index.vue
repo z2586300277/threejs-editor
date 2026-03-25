@@ -52,8 +52,8 @@
         </div>
         <div class="header-right">
           <el-button class="btn-add" link icon="Upload" @click="loadModelUrl">线上导入</el-button>
-          <el-button class="btn-add" link icon="Document" @click="exportTemplateJson">导出</el-button>
-          <el-button class="btn-add" link icon="download" @click="exportGLTF">下载</el-button>
+          <el-button class="btn-add" link icon="Document" @click="exportTemplateJson">模板</el-button>
+          <el-button class="btn-add" link icon="download" @click="exportGLTF">导出</el-button>
           <el-button @click="pict" icon="camera"></el-button>
           <el-button @click="openPanel">控制板</el-button>
           <el-button @click="saveScene">保存</el-button>
@@ -321,11 +321,13 @@ function delScene(item) {
 
 function exportTemplateJson() {
   if (!threeEditor) return ElMessage.error('没有可导出的场景')
+  ElMessageBox.confirm('是否下载当前渲染场景json模板？', '模板下载', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'info' }).then(() => {
   const blob = new Blob([JSON.stringify(threeEditor.saveSceneEdit())], { type: 'application/json' })
   const link = document.createElement('a')
   link.href = URL.createObjectURL(blob)
   link.download = (dataCores.sceneName || '场景') + '.json'
   link.click()
+  }).catch(() => {})
 }
 
 function pict() {
@@ -408,8 +410,8 @@ const doExport = () => {
       !child.visible
     ) return
 
-    // 包含 Mesh、Group、Object3D、Light 等
-    if (child.isMesh || child.isGroup || child.isObject3D || child.isLight || child.isLine || child.isPoints) {
+    // 包含 Mesh、Group、Object3D 等（排除粒子和灯光）
+    if ((child.isMesh || child.isGroup || child.isObject3D || child.isLine) && !child.isLight && !child.isPoints) {
         if(child.visible) exportObjects.push(child)
     }
   })
