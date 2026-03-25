@@ -116,6 +116,7 @@ else {
 }
 const listJ = window.editorJsons.map(v => __isProduction__ ? '/threejs-editor/' + v : '/' + v)
 listJ.splice(9, 0, ...addList)
+const lightTypes = ['环境光', '平行光', '点光源', '聚光灯', '半球光', '矩形面光源'];
 const data = [
   {
     icon: 'set-up',
@@ -126,6 +127,11 @@ const data = [
     icon: 'office-building',
     title: '模型',
     list: window.models,
+  },
+  {
+    title: '灯光',
+    icon: 'sunny',
+    list: lightTypes
   },
   {
     title: '组件',
@@ -192,6 +198,24 @@ async function clickLeft(v, point) {
       createGsapAnimation(threeEditor.controls.target, target, { duration: 0.3 })
     }
     transformControls.attach(mesh)
+  }
+  else if (active.value === '灯光') {
+    const { scene, transformControls } = threeEditor
+    const lightMap = {
+      '环境光': () => new THREE.AmbientLight(0xffffff, 1),
+      '平行光': () => new THREE.DirectionalLight(0xffffff, 1),
+      '点光源': () => new THREE.PointLight(0xffffff, 1, 0, 0),
+      '聚光灯': () => new THREE.SpotLight(0xffffff, 1, 0, Math.PI / 6, 0, 0),
+      '半球光': () => new THREE.HemisphereLight(0xffffff, 0x000000, 1),
+      '平面光': () => new THREE.RectAreaLight(0xffffff, 1, 100, 100),
+    }
+    const light = lightMap[v]()
+    if (light.target) scene.add(light.target)
+    light.editorType = 'isLight'
+    light.name = v
+    if (point) light.position.copy(point)
+    scene.add(light)
+    transformControls.attach(light)
   }
 }
 
