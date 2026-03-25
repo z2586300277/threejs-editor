@@ -246,8 +246,6 @@ export default {
         folder.add(this.initParameters, 'segments', 50, 300).step(10).name('细分段数');
         folder.add(this.initParameters, 'opacity', 0, 1).name('透明度');
         folder.add(this.initParameters, 'animationSpeed', 0.1, 2).name('动画速度');
-        folder.addHexColor(this.initParameters, 'color1').name('颜色1');
-        folder.addHexColor(this.initParameters, 'color2').name('颜色2');
     },
     
     // 创建组件

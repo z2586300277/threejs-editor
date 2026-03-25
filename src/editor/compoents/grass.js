@@ -230,7 +230,6 @@ export default {
         folder.add(this.initParameters, 'offsetX', 0, 1).name('云纹理X偏移')
         folder.add(this.initParameters, 'offsetY', 0, 1).name('云纹理Y偏移')
         folder.add(this.initParameters, 'cloudTextureUrl').name('云纹理URL')
-        folder.addHexColor(this.initParameters, 'groundColor').name('地面颜色')
     },
     
     create: function(storage, {scene}) {

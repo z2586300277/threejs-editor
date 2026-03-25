@@ -6,77 +6,92 @@ description: 创建 Three.js 编辑器组件
 
 你是 Three.js 编辑器的组件开发专家。请根据用户描述，在 `src/editor/compoents/` 目录下生成一个新的 3D 组件文件。
 
-## 组件规范
+## 标准组件规范
 
-所有组件必须遵循以下接口：
+参考 `src/editor/compoents/光柱.js` 的标准实现，所有组件必须遵循以下接口：
 
 ```javascript
 export default {
-    name: 'componentName',        // 组件唯一标识
-    label: '组件显示名称',         // 在编辑器中显示的名称
+    name: 'componentName',
+    label: '组件名称',
 
-    // 必需：创建组件实例
-    create(storage, { scene }) {
-        // storage: 序列化数据（首次创建时为 null）
-        // scene: 场景实例
+    // 只针对必要初始传参（可选）
+    initParameters: {
+        url: 'https://example.com/texture.png',
+        size: 0.25
+    },
 
-        // 定义默认参数
-        const params = {
-            color: '#00ffff',
-            size: 10
-        };
+    // 只针对必要初始传参面板（可选）
+    initPanel: function (folder) {
+        folder.add(this.initParameters, 'url').name('资源路径')
+        folder.add(this.initParameters, 'size').name('尺寸')
+    },
 
-        // 从 storage 恢复参数
-        if (storage?.params) {
-            Object.assign(params, storage.params);
+    // 创建组件（没有初始必要参数的话一般不使用storage）
+    create: function (storage) {
+        // 获取初始参数 只针对初始参数还原
+        const initParams = {
+            size: storage?.initParameters?.size || this.initParameters.size,
+            url: storage?.initParameters?.url || this.initParameters.url
         }
 
-        // 创建 Three.js 对象
-        const mesh = new THREE.Mesh(geometry, material);
-        mesh.params = params;  // 保存参数引用
+        // 创建几何体和材质
+        const geometry = new THREE.BoxGeometry(initParams.size, initParams.size, initParams.size)
+        const material = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.5 })
+        const mesh = new THREE.Mesh(geometry, material)
 
-        return mesh;
+        // 创建group
+        const group = new THREE.Group()
+        group.RootMaterials = [material]  // 保存材质引用用于面板控制
+        group.add(mesh)
+        group.initParameters = initParams  // 保存初始参数
+
+        return group
     },
 
-    // 可选：创建参数面板
-    createPanel(instance, folder) {
-        const params = instance.params;
-        folder.add(params, 'size', 1, 20).name('大小').onChange(() => {
-            // 更新逻辑
-        });
-        folder.addColor(params, 'color').name('颜色').onChange(() => {
-            // 更新逻辑
-        });
+    // 创建控制面板
+    createPanel(group, folder) {
+        const [material] = group.RootMaterials
+
+        folder.add(group.initParameters, 'url').name('资源路径')
+        folder.addHexColor(material.color).name('颜色')
+        folder.add(material, 'opacity', 0, 1).name('透明度')
     },
 
-    // 可选：序列化（保存场景时调用）
-    getStorage(instance) {
-        return { params: { ...instance.params } };
+    // 获取存储数据
+    getStorage: function (group) {
+        const { initParameters } = group
+        const [material] = group.RootMaterials
+
+        return {
+            initParameters,
+            RootMaterials: [
+                { color: material.color.getHex(), opacity: material.opacity }
+            ]
+        }
     },
 
-    // 可选：反序列化（加载场景时调用）
-    setStorage(instance, storage) {
-        if (!storage?.params) return;
-        Object.assign(instance.params, storage.params);
-        // 更新实例状态
+    // 设置存储数据
+    setStorage: function (group, storage) {
+        if (!storage) return
+
+        const [material] = group.RootMaterials
+        const [materialStorage] = storage.RootMaterials
+
+        material.color.setHex(materialStorage.color)
+        material.opacity = materialStorage.opacity
     }
 }
 ```
 
 ## 关键要点
 
-1. **参数管理**：在 create 方法内定义默认参数，通过 storage 恢复
-2. **动画更新**：使用 `scene.addUpdateListener(() => {})` 添加动画循环
-3. **内置面板**：实现 `createPanel` 方法支持参数调整
-4. **参数保存**：实现 `getStorage` 和 `setStorage` 方法
-5. **导入路径**：使用 `import * as THREE from 'three'`
-
-## 代码简化原则
-
-1. **避免冗余**：不添加 initParam、initFolder 等非必要的初始化方法
-2. **精简变量**：使用简短变量名（如 `p` 代替 `params`）
-3. **箭头函数**：getStorage/setStorage 使用箭头函数简化
-4. **直接赋值**：避免不必要的中间变量和函数封装
+1. **initParameters**：只针对必要的初始传参（如资源路径、初始尺寸），没有则不需要
+2. **initPanel**：配置初始参数面板，与 initParameters 配套使用
+3. **create**：只接收 storage 参数，通过 `storage?.initParameters` 还原初始参数
+4. **RootMaterials**：保存材质引用到 group 上，用于 createPanel 控制和序列化
+5. **initParameters**：保存到 group 上，用于面板显示和序列化
+6. **getStorage/setStorage**：序列化和反序列化，只保存必要数据（颜色用 getHex()）
 
 ## 示例
 
@@ -84,55 +99,84 @@ export default {
 
 输出：
 ```javascript
-import * as THREE from 'three';
+import * as THREE from 'three'
 
 export default {
-    name: '旋转立方体',
+    name: 'rotatingCube',
     label: '旋转立方体',
 
-    create(storage, { scene }) {
-        const params = {
-            size: 2,
-            color: '#00ffff',
-            speed: 1
-        };
+    initParameters: {
+        size: 2,
+        speed: 1
+    },
 
-        if (storage?.params) {
-            Object.assign(params, storage.params);
+    initPanel: function (folder) {
+        folder.add(this.initParameters, 'size', 0.5, 5).name('尺寸')
+        folder.add(this.initParameters, 'speed', 0, 5).name('速度')
+    },
+
+    create: function (storage) {
+        const initParams = {
+            size: storage?.initParameters?.size || this.initParameters.size,
+            speed: storage?.initParameters?.speed || this.initParameters.speed
         }
 
-        const geometry = new THREE.BoxGeometry(params.size, params.size, params.size);
-        const material = new THREE.MeshStandardMaterial({ color: params.color });
-        const cube = new THREE.Mesh(geometry, material);
-        cube.params = params;
+        const geometry = new THREE.BoxGeometry(initParams.size, initParams.size, initParams.size)
+        const material = new THREE.MeshStandardMaterial({ color: 0x00ffff, transparent: true, opacity: 0.8 })
+        const mesh = new THREE.Mesh(geometry, material)
 
-        scene.addUpdateListener(() => {
-            cube.rotation.y += 0.01 * params.speed;
-        });
+        const group = new THREE.Group()
+        group.RootMaterials = [material]
+        group.add(mesh)
+        group.initParameters = initParams
 
-        return cube;
+        // 添加动画（如果需要访问 scene，通过 this.scene 或传入）
+        const animate = () => {
+            mesh.rotation.y += 0.01 * initParams.speed
+        }
+        group.userData.animate = animate
+
+        return group
     },
 
-    createPanel(cube, folder) {
-        const params = cube.params;
-        folder.add(params, 'size', 1, 10).name('大小').onChange(() => {
-            cube.geometry.dispose();
-            cube.geometry = new THREE.BoxGeometry(params.size, params.size, params.size);
-        });
-        folder.addColor(params, 'color').name('颜色').onChange(() => {
-            cube.material.color.set(params.color);
-        });
-        folder.add(params, 'speed', 0, 5).name('速度');
+    createPanel(group, folder) {
+        const [material] = group.RootMaterials
+
+        folder.add(group.initParameters, 'size', 0.5, 5).name('尺寸').onChange(() => {
+            const mesh = group.children[0]
+            mesh.geometry.dispose()
+            mesh.geometry = new THREE.BoxGeometry(
+                group.initParameters.size,
+                group.initParameters.size,
+                group.initParameters.size
+            )
+        })
+
+        folder.add(group.initParameters, 'speed', 0, 5).name('速度')
+        folder.addHexColor(material.color).name('颜色')
+        folder.add(material, 'opacity', 0, 1).name('透明度')
     },
 
-    getStorage(cube) {
-        return { params: { ...cube.params } };
+    getStorage: function (group) {
+        const { initParameters } = group
+        const [material] = group.RootMaterials
+
+        return {
+            initParameters,
+            RootMaterials: [
+                { color: material.color.getHex(), opacity: material.opacity }
+            ]
+        }
     },
 
-    setStorage(cube, storage) {
-        if (!storage?.params) return;
-        Object.assign(cube.params, storage.params);
-        cube.material.color.set(cube.params.color);
+    setStorage: function (group, storage) {
+        if (!storage) return
+
+        const [material] = group.RootMaterials
+        const [materialStorage] = storage.RootMaterials
+
+        material.color.setHex(materialStorage.color)
+        material.opacity = materialStorage.opacity
     }
-};
+}
 ```
