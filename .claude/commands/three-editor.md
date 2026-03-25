@@ -47,25 +47,60 @@ Three.js 编辑器的 Claude Code 自定义技能集，用于辅助开发。
 
 ## 📚 组件开发规范
 
-所有组件必须遵循以下接口：
+参考 `src/editor/compoents/光柱.js` 的标准实现，所有组件必须遵循以下接口：
 
 ```javascript
 export default {
   name: 'componentName',
   label: '组件名称',
-  initParameters: { /* 默认参数 */ },
-  create(storage, threeEditor) { /* 返回 Three.js 对象 */ },
-  getStorage(mesh) { /* 序列化 */ },
-  setStorage(mesh, storage) { /* 反序列化 */ }
+
+  // 只针对必要初始传参（可选）
+  initParameters: { url: 'xxx', size: 0.25 },
+
+  // 只针对必要初始传参面板（可选）
+  initPanel: function (folder) {
+    folder.add(this.initParameters, 'url').name('资源路径')
+  },
+
+  // 创建组件
+  create: function (storage) {
+    const initParams = {
+      size: storage?.initParameters?.size || this.initParameters.size
+    }
+    const group = new THREE.Group()
+    group.RootMaterials = [material]  // 保存材质引用
+    group.initParameters = initParams  // 保存初始参数
+    return group
+  },
+
+  // 创建控制面板
+  createPanel(group, folder) {
+    const [material] = group.RootMaterials
+    folder.addHexColor(material.color).name('颜色')
+  },
+
+  // 序列化
+  getStorage: function (group) {
+    return {
+      initParameters: group.initParameters,
+      RootMaterials: [{ color: material.color.getHex() }]
+    }
+  },
+
+  // 反序列化
+  setStorage: function (group, storage) {
+    if (!storage) return
+    material.color.setHex(storage.RootMaterials[0].color)
+  }
 }
 ```
 
 ## 🎯 关键要点
 
-1. **资源清理**：必须设置 `mesh.onRemoveCall` 清理函数
-2. **动画循环**：使用 `scene.addUpdateListener(() => {})`
-3. **参数存储**：将配置存入 `mesh.userData.params`
-4. **序列化**：`getStorage` 只返回可 JSON 序列化的数据
+1. **initParameters**：只针对必要的初始传参（如资源路径、初始尺寸）
+2. **RootMaterials**：保存材质引用到 group 上，用于面板控制和序列化
+3. **create 方法**：只接收 storage 参数，通过 `storage?.initParameters` 还原
+4. **序列化**：颜色使用 `getHex()` 而非 `getHexString()`
 
 ## 🛠️ 技术栈
 

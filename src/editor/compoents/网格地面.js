@@ -1,8 +1,7 @@
 import * as THREE from 'three';
 
 // 顶点着色器
-const baseVertexShader = `#include <fog_pars_vertex>
-
+const baseVertexShader = `
 varying vec2 vUv;
 
 void main()
@@ -10,15 +9,10 @@ void main()
     gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
 
     vUv = uv;
-
-    #include <begin_vertex>
-    #include <project_vertex>
-    #include <fog_vertex>
 }`;
 
 // 片元着色器
-const baseFragmentShader = `#include <fog_pars_fragment>
-
+const baseFragmentShader = `
 uniform float uGridThickness;
 uniform vec3 uGridColor;
 uniform float uCrossScale;
@@ -85,8 +79,6 @@ void main()
     vec3 color = mix(gridColor, uCrossColor, vec3(crossUv));
 
     gl_FragColor = vec4(color, 1.0);
-
-    #include <fog_fragment>
 }`;
 
 // 初始参数 - 美化版
@@ -99,9 +91,6 @@ const initParameters = {
     crossThickness: 0.01,          // 更细的交叉线
     cross: 0.15,                   // 交叉线范围减小
     gridScale: 24,                 // 更密的网格
-    fogNear: 15,                   // 远一点的雾起始
-    fogFar: 80,                    // 更远的雾结束
-    fogColor: 0x0a1525            // 深蓝色雾效
 };
 
 // 网格地面类
@@ -126,7 +115,6 @@ class GridFloor extends THREE.Object3D {
             fragmentShader: baseFragmentShader,
             side: THREE.DoubleSide,
             transparent: true,
-            fog: true,
             uniforms: {
                 // Floor
                 uFloorColor: { value: new THREE.Color(params.floorColor) },
@@ -139,11 +127,6 @@ class GridFloor extends THREE.Object3D {
                 uCrossThickness: { value: params.crossThickness },
                 uCross: { value: params.cross },
                 uCrossColor: { value: new THREE.Color(params.crossColor) },
-                
-                // Fog
-                fogColor: { value: new THREE.Color(params.fogColor) },
-                fogNear: { value: params.fogNear },
-                fogFar: { value: params.fogFar },
             }
         });
         
@@ -180,9 +163,6 @@ class GridFloor extends THREE.Object3D {
             this.material.uniforms.uCrossThickness.value = this.params.crossThickness;
             this.material.uniforms.uCross.value = this.params.cross;
             this.material.uniforms.uCrossColor.value.set(this.params.crossColor);
-            this.material.uniforms.fogColor.value.set(this.params.fogColor);
-            this.material.uniforms.fogNear.value = this.params.fogNear;
-            this.material.uniforms.fogFar.value = this.params.fogFar;
         }
     }
     
@@ -205,22 +185,6 @@ export default {
     label: '网格地面',
     
     initParameters,
-    
-    // 初始化面板
-    initPanel: function(folder) {
-        folder.add(this.initParameters, 'size', 10, 100).name('地面尺寸');
-        folder.add(this.initParameters, 'gridThickness', 0, 0.1).step(0.001).name('网格粗细');
-        folder.addHexColor(this.initParameters, 'gridColor').name('网格颜色');
-        folder.addHexColor(this.initParameters, 'floorColor').name('地面颜色');
-        folder.addHexColor(this.initParameters, 'crossColor').name('交叉线颜色');
-        folder.add(this.initParameters, 'crossThickness', 0, 0.1).step(0.001).name('交叉线粗细');
-        folder.add(this.initParameters, 'cross', 0, 1).step(0.01).name('交叉线强度');
-        
-        // 雾效参数
-        folder.addHexColor(this.initParameters, 'fogColor').name('雾颜色');
-        folder.add(this.initParameters, 'fogNear', -5, 50).name('雾起始');
-        folder.add(this.initParameters, 'fogFar', 10, 100).name('雾结束');
-    },
     
     // 创建组件
     create: function(storage, {scene}) {
@@ -265,30 +229,6 @@ export default {
         });
         
         folder.addColor(gridFloor.material.uniforms.uCrossColor, 'value').name('交叉线颜色');
-        
-        // 雾效参数
-        folder.addColor(gridFloor.material.uniforms.fogColor, 'value').name('雾颜色').onChange(()=>{
-            // 同步更新场景雾效
-            if(window.threeEditor && window.threeEditor.scene.fog){
-                window.threeEditor.scene.fog.color.copy(gridFloor.material.uniforms.fogColor.value);
-            }
-        });
-        
-        folder.add(params, 'fogNear', -5, 50).name('雾起始').onChange(() => {
-            gridFloor.updateUniforms();
-            // 同步更新场景雾效
-            if(window.threeEditor && window.threeEditor.scene.fog){
-                window.threeEditor.scene.fog.near = params.fogNear;
-            }
-        });
-        
-        folder.add(params, 'fogFar', 10, 100).name('雾结束').onChange(() => {
-            gridFloor.updateUniforms();
-            // 同步更新场景雾效
-            if(window.threeEditor && window.threeEditor.scene.fog){
-                window.threeEditor.scene.fog.far = params.fogFar;
-            }
-        });
     },
     
     // 获取存储数据
@@ -301,7 +241,6 @@ export default {
                 gridColor: material.uniforms.uGridColor.value.getHex(),
                 floorColor: material.uniforms.uFloorColor.value.getHex(),
                 crossColor: material.uniforms.uCrossColor.value.getHex(),
-                fogColor: material.uniforms.fogColor.value.getHex(),
             }
         };
     },
@@ -317,23 +256,6 @@ export default {
             // 更新几何体和材质
             gridFloor.updateGeometry();
             gridFloor.updateUniforms();
-            
-            // 更新场景雾效
-            if(window.threeEditor && window.threeEditor.scene){
-                const scene = window.threeEditor.scene;
-                
-                if(scene.fog){
-                    scene.fog.color.setHex(storage.params.fogColor);
-                    scene.fog.near = storage.params.fogNear;
-                    scene.fog.far = storage.params.fogFar;
-                } else {
-                    scene.fog = new THREE.Fog(
-                        storage.params.fogColor,
-                        storage.params.fogNear,
-                        storage.params.fogFar
-                    );
-                }
-            }
         }
     }
 };

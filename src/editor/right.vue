@@ -1,6 +1,6 @@
 <template>
-    <div style="margin-top: 10px;">
-        <span class="group-title"> &nbsp;&nbsp; &nbsp;&nbsp;场景树 <el-button title="清理缓存" link style="margin-right: 20px;" :icon="Brush" @click="clear"></el-button></span> 
+    <div style="padding-top: 8px;">
+        <span class="group-title"> &nbsp;&nbsp; &nbsp;&nbsp;场景树 <el-button title="清理缓存" link style="margin-right: 25px;" :icon="BrushFilled " @click="clear"></el-button></span> 
         <div class="divider"></div>
     </div>
     <div class="scene-tree">
@@ -14,7 +14,8 @@
                 <Hide v-show="!value.visible" />
             </el-icon> 
             &nbsp;&nbsp;    
-            <div class="text" @click="selectObj(value)">{{ value.name || value.type }} </div>
+            <el-input v-if="editingId === value.id" v-model="value.name" size="small" autofocus @blur="editingId = null" @keyup.enter="editingId = null" style="width:100px" />
+            <div v-else class="text" @click="selectObj(value)" @dblclick="editingId = value.id">{{ value.name || value.type }} </div>
            <div class="del">
               <el-popconfirm title="确定删除？" @confirm="delI(value)">
                 <template #reference>
@@ -61,8 +62,8 @@
                     <el-icon style="color:#a8d4fd;">
                         <ScaleToOriginal />
                     </el-icon>
-                    <span style="color:#e5eaf3;font-size: 14px;">&nbsp;像素比&nbsp;&nbsp;</span>
-                    <el-input-number v-model="pixelRatio" :min="0.5" :max="3" :step="0.5"></el-input-number>
+                    <span style="color:#e5eaf3;font-size: 13px;">&nbsp;像素比&nbsp;&nbsp;</span>
+                    <el-input-number size="small" v-model="pixelRatio" :min="0.5" :max="3" :step="0.5"></el-input-number>
                 </div>
 
                 <!-- logarithmicDepthBuffer 选项 -->
@@ -118,10 +119,11 @@
 
 <script setup>
 import { computed, reactive, ref, shallowReactive, watch } from 'vue'
-import { Grid, ScaleToOriginal, Histogram, View, Hide, Delete, ArrowRightBold, Brush} from '@element-plus/icons-vue'
+import { Grid, ScaleToOriginal, Histogram, View, Hide, Delete, ArrowRightBold, BrushFilled } from '@element-plus/icons-vue'
 import { ElMessageBox, ElMessage } from 'element-plus'
 
 const sceneObjList = reactive([])
+const editingId = ref(null)
 
 const selectedSet = ref('蓝天')
 const datalist = reactive([
@@ -179,10 +181,10 @@ watch(pixelRatio, (val) => {
 const externalLinks = reactive([
     { name: '素材库', url: 'https://z2586300277.github.io/3d-file-server/link.html', icon: 'Collection' },
     { name: 'Npm内核', url: 'https://www.npmjs.com/package/three-edit-cores', icon: 'Box' },
-    { name: '定制开发', url: 'https://www.goofish.com/personal?userId=2885508577', icon: 'Promotion' },
-    { name: '赞赏', url: 'https://z2586300277.github.io/sponsor.html', icon: 'StarFilled' },
     { name: 'B站', url: 'https://space.bilibili.com/245165721' , icon: 'ChatDotRound' },
     { name: '交流群', url: 'https://z2586300277.github.io/personalCode.html', icon: 'Document' },
+    { name: '定制开发', url: 'https://www.goofish.com/personal?userId=2885508577', icon: 'Promotion' },
+    { name: '赞赏', url: 'https://z2586300277.github.io/sponsor.html', icon: 'StarFilled' },
 ])
 
 // 打开外部链接
@@ -357,6 +359,7 @@ function clear() {
 
 .option-label {
     display: flex;
+    font-size: 13px;
     align-items: center;
     gap: 8px;
 }

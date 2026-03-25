@@ -116,7 +116,7 @@ else {
 }
 const listJ = window.editorJsons.map(v => __isProduction__ ? '/threejs-editor/' + v : '/' + v)
 listJ.splice(9, 0, ...addList)
-const lightTypes = ['环境光', '平行光', '点光源', '聚光灯', '半球光', '矩形面光源'];
+const lightTypes = ['环境光', '平行光', '点光源', '聚光灯', '半球光', '平面光'];
 const data = [
   {
     icon: 'set-up',

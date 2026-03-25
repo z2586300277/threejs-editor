@@ -9,26 +9,34 @@ description: 创建 Shader 特效组件
 ## Shader 组件模板
 
 ```javascript
-import * as THREE from 'three';
+import * as THREE from 'three'
 
 export default {
     name: 'shaderEffect',
     label: 'Shader特效',
 
     initParameters: {
-        color: '#00ffff',
+        size: 10,
         speed: 1
     },
 
-    create(storage, { scene }) {
-        const params = storage || this.initParameters;
+    initPanel: function (folder) {
+        folder.add(this.initParameters, 'size', 1, 20).name('尺寸')
+        folder.add(this.initParameters, 'speed', 0, 5).name('速度')
+    },
 
-        const geometry = new THREE.PlaneGeometry(10, 10);
+    create: function (storage) {
+        const initParams = {
+            size: storage?.initParameters?.size || this.initParameters.size,
+            speed: storage?.initParameters?.speed || this.initParameters.speed
+        }
+
+        const geometry = new THREE.PlaneGeometry(initParams.size, initParams.size)
         const material = new THREE.ShaderMaterial({
             transparent: true,
             side: THREE.DoubleSide,
             uniforms: {
-                uColor: { value: new THREE.Color(params.color) },
+                uColor: { value: new THREE.Color(0x00ffff) },
                 uTime: { value: 0 }
             },
             vertexShader: `
@@ -48,27 +56,46 @@ export default {
                     gl_FragColor = vec4(uColor, alpha);
                 }
             `
-        });
+        })
 
-        const mesh = new THREE.Mesh(geometry, material);
+        const mesh = new THREE.Mesh(geometry, material)
 
-        scene.addUpdateListener(() => {
-            material.uniforms.uTime.value += 0.016 * params.speed;
-        });
+        const group = new THREE.Group()
+        group.RootMaterials = [material]
+        group.add(mesh)
+        group.initParameters = initParams
 
-        mesh.onRemoveCall = () => {
-            geometry.dispose();
-            material.dispose();
-        };
-
-        mesh.userData.params = params;
-        return mesh;
+        return group
     },
 
-    getStorage(mesh) {
-        return mesh.userData.params;
+    createPanel(group, folder) {
+        const [material] = group.RootMaterials
+
+        folder.add(group.initParameters, 'speed', 0, 5).name('速度')
+        folder.addHexColor(material.uniforms.uColor.value).name('颜色')
+    },
+
+    getStorage: function (group) {
+        const { initParameters } = group
+        const [material] = group.RootMaterials
+
+        return {
+            initParameters,
+            RootMaterials: [
+                { color: material.uniforms.uColor.value.getHex() }
+            ]
+        }
+    },
+
+    setStorage: function (group, storage) {
+        if (!storage) return
+
+        const [material] = group.RootMaterials
+        const [materialStorage] = storage.RootMaterials
+
+        material.uniforms.uColor.value.setHex(materialStorage.color)
     }
-};
+}
 ```
 
 ## Shader 开发要点

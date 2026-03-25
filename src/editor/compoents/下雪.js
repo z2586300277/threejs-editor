@@ -178,16 +178,6 @@ export default {
     
     initParameters,
     
-    // 初始化面板
-    initPanel: function(folder) {
-        folder.add(this.initParameters, 'particleCount', 100, 5000).step(100).name('粒子数量');
-        folder.add(this.initParameters, 'particleSize', 1, 20).name('粒子大小');
-        folder.add(this.initParameters, 'fallSpeed', 0.01, 1).name('下落速度');
-        folder.add(this.initParameters, 'swayFactor', 0, 0.5).name('摇摆幅度');
-        folder.add(this.initParameters, 'range', 10, 500).name('分布范围');
-        folder.addHexColor(this.initParameters, 'color').name('雪花颜色');
-    },
-    
     // 创建组件
     create: function(storage, {scene}) {
         // 获取参数
