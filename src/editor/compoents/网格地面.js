@@ -252,8 +252,8 @@ export default {
             gridFloor.updateUniforms();
         });
         
-        folder.addColorRGB(gridFloor.material.uniforms.uGridColor.value).name('网格颜色');
-        folder.addColorRGB(gridFloor.material.uniforms.uFloorColor.value).name('地面颜色');
+        folder.addColor(gridFloor.material.uniforms.uGridColor, 'value').name('网格颜色');
+        folder.addColor(gridFloor.material.uniforms.uFloorColor, 'value').name('地面颜色');
         
         // 交叉线参数
         folder.add(params, 'crossThickness', 0, 0.1).step(0.001).name('交叉线粗细').onChange(() => {
@@ -264,10 +264,10 @@ export default {
             gridFloor.updateUniforms();
         });
         
-        folder.addColorRGB(gridFloor.material.uniforms.uCrossColor.value).name('交叉线颜色');
+        folder.addColor(gridFloor.material.uniforms.uCrossColor, 'value').name('交叉线颜色');
         
         // 雾效参数
-        folder.addColorRGB(gridFloor.material.uniforms.fogColor.value).name('雾颜色').onChange(()=>{
+        folder.addColor(gridFloor.material.uniforms.fogColor, 'value').name('雾颜色').onChange(()=>{
             // 同步更新场景雾效
             if(window.threeEditor && window.threeEditor.scene.fog){
                 window.threeEditor.scene.fog.color.copy(gridFloor.material.uniforms.fogColor.value);

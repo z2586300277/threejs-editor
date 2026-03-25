@@ -80,10 +80,10 @@ export default {
         const mat = mesh.userData.material;
 
         folder.add(p, 'speed', 0, 5).name('速度');
-        folder.addColorRGB(p, 'color1').name('颜色1').onChange(() => {
+        folder.addColor(p, 'color1').name('颜色1').onChange(() => {
             mat.uniforms.uColor1.value.set(p.color1);
         });
-        folder.addColorRGB(p, 'color2').name('颜色2').onChange(() => {
+        folder.addColor(p, 'color2').name('颜色2').onChange(() => {
             mat.uniforms.uColor2.value.set(p.color2);
         });
     },

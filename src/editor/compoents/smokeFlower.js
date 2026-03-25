@@ -296,8 +296,8 @@ export default {
         // 材质参数
         folder.add(material, 'opacity', 0, 1).name('透明度');
         folder.add(uniforms.animationSpeed, 'value', 0.1, 2).name('动画速度');
-        folder.addColorRGB(uniforms.color1.value).name('颜色1');
-        folder.addColorRGB(uniforms.color2.value).name('颜色2');
+        folder.addColor(uniforms.color1, 'value').name('颜色1');
+        folder.addColor(uniforms.color2, 'value').name('颜色2');
         
         // 动画控制
         folder.add(smokeFlower, 'needsUpdate').name('启用动画');
