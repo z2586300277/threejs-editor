@@ -94,7 +94,7 @@
             </el-radio-button>
             <el-radio-button label="旋转" value="旋转">
               <el-icon>
-                <RefreshRight />
+                <Refresh />
               </el-icon>旋转
             </el-radio-button>
             <el-radio-button label="缩放" value="缩放">
@@ -102,11 +102,11 @@
                 <ZoomIn />
               </el-icon>缩放
             </el-radio-button>
-            <!-- <el-radio-button label="无操作" value="无操作">
+            <el-radio-button label="预览" value="预览">
               <el-icon>
                 <Remove  />
-              </el-icon>无操作
-            </el-radio-button> -->
+              </el-icon>预览
+            </el-radio-button>
           </el-radio-group>
             <span class="divider"></span>
             <el-button-group size="small">
@@ -193,7 +193,7 @@
 import { defineAsyncComponent, reactive, ref, watch } from 'vue'
 import EditorVue from './editor.vue'
 import { ElButton, ElSelect, ElOption, ElMessage, ElIcon, ElMessageBox } from 'element-plus'
-import { Pointer, Position, RefreshRight, ZoomIn, Remove  } from '@element-plus/icons-vue'
+import { Pointer, Position, RefreshRight, ZoomIn, Remove, Refresh } from '@element-plus/icons-vue'
 import LeftPanel from './left.vue'
 import RightPanel from './right.vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -263,13 +263,14 @@ if (localStorage.getItem('new_previewScene') === 'true') {
 watch(currentMode, (val) => {
   const { transformControls } = threeEditor
   if (val === '选中') threeEditor.handler.mode = 'select'
-  else if(val === '无操作') threeEditor.handler.mode = 'none'
+  else if(val === '预览') threeEditor.handler.mode = 'none'
   else threeEditor.handler.mode = 'transform'
   if (val === '平移') transformControls.setMode('translate')
   else if (val === '旋转') transformControls.setMode('rotate')
   else if (val === '缩放') transformControls.setMode('scale')
 })
 
+/* 这是内置事件 如不需要也可以自行使用原生 射线获取场景点击 */
 const getEvent = (e) => {
   threeEditor.getSceneEvent(e, info => {
      info.rootObject?.EVENTCALL?.(info) // 添加在定义点击事件处理
@@ -281,18 +282,17 @@ const emitThreeEditor = (threeEditor) => {
   rightPanel.value.helperConf(threeEditor)
   rightPanel.value.startEditor(threeEditor)
   window.threeEditor = threeEditor
-  openKeyEnable.value = threeEditor.handler.openKeyEnable
-  rightClickMenusEnable.value = threeEditor.handler.rightClickMenusEnable
-  selectChildMode.value = threeEditor.handler.selectChildEnabled
-  Object.defineProperty(threeEditor.handler, 'openKeyEnable', {
-    get() {
-      return this._openKeyEnable ?? false
-    },
-    set(val) {
-      this._openKeyEnable = val
-      openKeyEnable.value = val
-    }
-  })
+
+  // 轮询 handler 状态，值变化时才同步到工具栏 Vue ref
+  const tcModeMap = { translate: '平移', rotate: '旋转', scale: '缩放' }
+  setInterval(() => {
+    const { handler, transformControls } = threeEditor
+    if (openKeyEnable.value !== handler.openKeyEnable) openKeyEnable.value = handler.openKeyEnable
+    if (rightClickMenusEnable.value !== handler.rightClickMenusEnable) rightClickMenusEnable.value = handler.rightClickMenusEnable
+    if (selectChildMode.value !== handler.selectChildEnabled) selectChildMode.value = handler.selectChildEnabled
+    const newMode = handler.mode === 'select' ? '选中' : handler.mode === 'none' ? '预览' : (tcModeMap[transformControls.mode] ?? '平移')
+    if (currentMode.value !== newMode) currentMode.value = newMode
+  }, 600)
 }
 
 function saveLocal() {
