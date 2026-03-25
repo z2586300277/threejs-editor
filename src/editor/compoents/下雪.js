@@ -237,7 +237,7 @@ export default {
         });
         
         // 颜色控制
-        folder.addColorRGB(params, 'color').name('雪花颜色').onChange(() => {
+        folder.addColor(params, 'color').name('雪花颜色').onChange(() => {
             snowEffect.updateParameters();
         });
         

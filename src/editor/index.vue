@@ -38,7 +38,7 @@
         </div>
         <div class="title">
           <el-link style="font-size: 16px;"
-            @click="openUrl('https://z2586300277.github.io/')">🏠作者官网</el-link>&nbsp;&nbsp;
+            @click="openUrl('https://z2586300277.github.io/')">🏠官网</el-link>&nbsp;&nbsp;
           <el-link style="font-size: 16px;"
             @click="openUrl('https://z2586300277.github.io/three-editor/dist/#/editor')">🍁旧编辑器</el-link>&nbsp;&nbsp;
           - &nbsp;
@@ -48,7 +48,7 @@
             style="font-size: 16px;">🌾嵌入项目</el-link>
             &nbsp;&nbsp;
               <el-link @click="openUrl('https://github.com/z2586300277/threejs-editor/tree/main/src/editor/compoents')"
-            style="font-size: 16px;">🌳组件开发</el-link>
+            style="font-size: 16px;">🌳组件</el-link>
         </div>
         <div class="header-right">
           <el-button class="btn-add" link icon="Upload" @click="loadModelUrl">线上导入</el-button>
@@ -102,12 +102,21 @@
                 <ZoomIn />
               </el-icon>缩放
             </el-radio-button>
-            <el-radio-button label="无操作" value="无操作">
+            <!-- <el-radio-button label="无操作" value="无操作">
               <el-icon>
                 <Remove  />
               </el-icon>无操作
-            </el-radio-button>
+            </el-radio-button> -->
           </el-radio-group>
+            <span class="divider"></span>
+            <el-button-group size="small">
+            <el-button @click="handleUndo" title="撤销 (Ctrl+Z)">
+              <el-icon><RefreshLeft /></el-icon>
+            </el-button>
+            <el-button @click="handleRedo" title="重做 (Ctrl+Y)">
+              <el-icon><RefreshRight /></el-icon>
+            </el-button>
+            </el-button-group>
         </div>
       </div>
 
@@ -189,7 +198,7 @@ import LeftPanel from './left.vue'
 import RightPanel from './right.vue'
 import { useRoute, useRouter } from 'vue-router'
 import { setIndexDB } from './indexDb'
-import { getObjectViews, createGsapAnimation } from './lib'
+import { getObjectViews, createGsapAnimation, restoreHistoryHandler } from './lib'
 import * as THREE from 'three'
 import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter.js'
 
@@ -410,8 +419,6 @@ const doExport = () => {
     return
   }
 
-  console.log('导出对象列表:', exportObjects)
-
   // 创建临时场景用于导出
   const exportScene = new THREE.Scene()
   exportObjects.forEach(obj => exportScene.add(obj.clone(true)))
@@ -435,6 +442,14 @@ const doExport = () => {
     (error) => ElMessage.error('导出失败: ' + error.message),
     { binary: true, embedImages: true, includeCustomExtensions: true }
   )
+}
+
+const handleUndo = () => {
+  if (threeEditor) restoreHistoryHandler(threeEditor.handler.handlerHistory, 'z')
+}
+
+const handleRedo = () => {
+  if (threeEditor) restoreHistoryHandler(threeEditor.handler.handlerHistory, 'y')
 }
 </script>
 

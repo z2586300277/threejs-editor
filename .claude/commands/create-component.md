@@ -44,7 +44,7 @@ export default {
         folder.add(params, 'size', 1, 20).name('大小').onChange(() => {
             // 更新逻辑
         });
-        folder.addColorRGB(params, 'color').name('颜色').onChange(() => {
+        folder.addColor(params, 'color').name('颜色').onChange(() => {
             // 更新逻辑
         });
     },
@@ -119,7 +119,7 @@ export default {
             cube.geometry.dispose();
             cube.geometry = new THREE.BoxGeometry(params.size, params.size, params.size);
         });
-        folder.addColorRGB(params, 'color').name('颜色').onChange(() => {
+        folder.addColor(params, 'color').name('颜色').onChange(() => {
             cube.material.color.set(params.color);
         });
         folder.add(params, 'speed', 0, 5).name('速度');

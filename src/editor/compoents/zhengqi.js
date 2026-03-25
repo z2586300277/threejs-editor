@@ -139,6 +139,7 @@ export default {
         if (storage?.params) Object.assign(params, storage.params);
 
         const steam = new Steam(params);
+        steam.disBlendShader = true;
         scene.addUpdateListener(() => steam.update());
         return steam;
     },
@@ -173,7 +174,7 @@ export default {
             steam.geometry = steam.createGeometry();
             steam.particles.geometry = steam.geometry;
         });
-        folder.addColorRGB(p, 'color').name('蒸汽颜色').onChange(() => steam.updateParameters());
+        folder.addColor(p, 'color').name('蒸汽颜色').onChange(() => steam.updateParameters());
     },
 
     getStorage: (steam) => ({ params: { ...steam.params } }),

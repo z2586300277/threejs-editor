@@ -205,7 +205,7 @@ export default {
             waterFlow.geometry = waterFlow.createGeometry();
             waterFlow.particles.geometry = waterFlow.geometry;
         });
-        folder.addColorRGB(params, 'color').name('水花颜色').onChange(() => waterFlow.updateParameters());
+        folder.addColor(params, 'color').name('水花颜色').onChange(() => waterFlow.updateParameters());
         folder.add(params, 'opacity', 0.05, 1.0).name('透明度').onChange(() => waterFlow.updateParameters());
         folder.add(params, 'density', 0.1, 3.0).name('浓度').onChange(() => waterFlow.updateParameters());
         folder.add(params, 'alpTest', 0.0, 1.0).name('Alpha测试').onChange(() => waterFlow.updateParameters());

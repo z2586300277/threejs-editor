@@ -184,7 +184,7 @@ export default {
             particleText.uniforms.opacity.value = params.opacity;
         });
         folder.add(params, 'animationSpeed', 0.1, 2).name('动画速度');
-        folder.addColorRGB(particleText.uniforms.color.value).name('颜色');
+        folder.addColor(particleText.uniforms.color, 'value').name('颜色');
         folder.add(params, 'fontUrl').name('字体URL');
         folder.addFn(() => {
             particleText.loadFont();
