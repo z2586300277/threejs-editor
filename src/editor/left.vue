@@ -295,6 +295,7 @@ const dragAdd = (e, v) => {
 
 .content-panel {
   flex: 1;
+  height: calc(100% - 40px);
   overflow: auto;
   display: flex;
   flex-direction: column;

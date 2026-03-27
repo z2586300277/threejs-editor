@@ -96,7 +96,9 @@
             </div>
         </div>
     </div>
-
+    <div class="scene-stats">
+       <span>物体 {{ sceneStats.objects.toLocaleString() }}</span><span>顶点 {{ sceneStats.vertices.toLocaleString() }}</span><span>三角面 {{ sceneStats.triangles.toLocaleString() }}</span>
+    </div>
     <!-- 外部链接面板 -->
     <div class="external-links">
         <div class="control-group">
@@ -124,6 +126,27 @@ import { ElMessageBox, ElMessage } from 'element-plus'
 
 const sceneObjList = reactive([])
 const editingId = ref(null)
+const sceneStats = reactive({ vertices: 0, edges: 0, triangles: 0, objects: 0 })
+
+function updateSceneStats() {
+  let vertices = 0, triangles = 0, objects = 0
+  const scene = window.threeEditor?.scene
+  if (!scene) return
+  scene.traverse(obj => {
+    const geo = obj.geometry
+    if (!geo) return
+    objects++
+    const pos = geo.attributes?.position
+    if (pos) vertices += pos.count
+    if (geo.index) triangles += geo.index.count / 3
+    else if (pos) triangles += pos.count / 3
+  })
+  sceneStats.vertices = vertices
+  sceneStats.edges = Math.floor(triangles * 1.5)
+  sceneStats.triangles = Math.floor(triangles)
+  sceneStats.objects = objects
+}
+window.updateSceneStats = updateSceneStats
 
 const selectedSet = ref('蓝天')
 const datalist = reactive([
@@ -223,6 +246,7 @@ defineExpose({
                  push_obj([obj])
             })
             sceneAdd.apply(this, args)
+            updateSceneStats()
         }
         const sceneRemove = scene.remove
         scene.remove = function (...args) {
@@ -233,6 +257,7 @@ defineExpose({
                 }
             })
             sceneRemove.apply(this, args)
+            updateSceneStats()
         }
     }
 });
@@ -325,7 +350,7 @@ function clear() {
 .control-group {
     background-color: rgba(30, 30, 30, 0.6);
     border-radius: 8px;
-    padding: 0px 12px 12px 12px;
+    padding: 0px 12px 0px 12px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
@@ -440,5 +465,13 @@ function clear() {
         justify-content: flex-end;
         
     }
+}
+
+.scene-stats {
+  font-size: 10px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-evenly;
 }
 </style>
