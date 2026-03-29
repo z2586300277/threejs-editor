@@ -133,6 +133,7 @@ function updateSceneStats() {
   const scene = window.threeEditor?.scene
   if (!scene) return
   scene.traverse(obj => {
+    if (obj.isTransformControls || obj.isHelper || obj.type?.includes('Helper')) return
     const geo = obj.geometry
     if (!geo) return
     objects++

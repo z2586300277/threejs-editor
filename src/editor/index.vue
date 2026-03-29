@@ -156,28 +156,24 @@
           <div class="shortcuts-content" v-show="openKeyEnable">
             <div class="shortcuts-grid">
               <div class="shortcuts-section">
-                <div class="section-title">键盘操作</div>
                 <div class="shortcut-row"><span class="key">Shift+Tab</span><span class="desc">根/子 切换</span></div>
-                <div class="shortcut-row"><span class="key">↑/↓</span><span class="desc">子 层级</span></div>
-                <div class="shortcut-row"><span class="key">Ctrl+C </span><span class="desc">复制选中</span></div>
+                <div class="shortcut-row"><span class="key">↑/↓</span><span class="desc">子层级切换</span></div>
               </div>
               <div class="shortcuts-section">
-                <div class="section-title">变换模式</div>
-                <div class="shortcut-row"><span class="key">R</span><span class="desc">旋转</span></div>
-                <div class="shortcut-row"><span class="key">G</span><span class="desc">平移</span></div>
-                <div class="shortcut-row"><span class="key">T</span><span class="desc">缩放</span></div>
+                <div class="shortcut-row"><span class="key">Tab</span><span class="desc">变换⟷选择</span></div>
+                <div class="shortcut-row"><span class="key">R/T/G</span><span class="desc">旋转/平移/缩放</span></div>
               </div>
               <div class="shortcuts-section">
-                <div class="section-title">变换操作</div>
                 <div class="shortcut-row"><span class="key">Q,W,E,A,S,D</span><span class="desc">XYZ轴微调</span></div>
                 <div class="shortcut-row"><span class="key">Shift+X/Y/Z</span><span class="desc">轴旋转90度</span></div>
+              </div>
+              <div class="shortcuts-section">
+                <div class="shortcut-row"><span class="key">Ctrl+C </span><span class="desc">复制选中</span></div>
                 <div class="shortcut-row"><span class="key">Ctrl+Z/Y</span><span class="desc">撤销/反撤销</span></div>
               </div>
               <div class="shortcuts-section">
-                <div class="section-title">其他操作</div>
-                <div class="shortcut-row"><span class="key">Tab</span><span class="desc">变换⟷选择</span></div>
-                <div class="shortcut-row"><span class="key">Del</span><span class="desc">删除</span></div>
-                <div class="shortcut-row"><span class="key">Esc</span><span class="desc">退出操作</span></div>
+                <div class="shortcut-row"><span class="key">Del</span><span class="desc">删除选中</span></div>
+                <div class="shortcut-row"><span class="key">Esc</span><span class="desc">取消选中</span></div>
               </div>
             </div>
           </div>
@@ -286,12 +282,15 @@ const emitThreeEditor = (threeEditor) => {
   // 轮询 handler 状态，值变化时才同步到工具栏 Vue ref
   const tcModeMap = { translate: '平移', rotate: '旋转', scale: '缩放' }
   setInterval(() => {
+    try {
     const { handler, transformControls } = threeEditor
     if (openKeyEnable.value !== handler.openKeyEnable) openKeyEnable.value = handler.openKeyEnable
     if (rightClickMenusEnable.value !== handler.rightClickMenusEnable) rightClickMenusEnable.value = handler.rightClickMenusEnable
     if (selectChildMode.value !== handler.selectChildEnabled) selectChildMode.value = handler.selectChildEnabled
     const newMode = handler.mode === 'select' ? '选中' : handler.mode === 'none' ? '预览' : (tcModeMap[transformControls.mode] ?? '平移')
     if (currentMode.value !== newMode) currentMode.value = newMode
+    } catch (error) {
+    }
   }, 600)
 }
 
@@ -678,8 +677,8 @@ const handleRedo = () => {
 
 .shortcuts-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
+  grid-template-columns: repeat(5, 1fr);
+  // gap: 10px;
 }
 
 .shortcuts-section {

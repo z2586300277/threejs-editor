@@ -26,6 +26,11 @@ export async function setIndexDB() {
             // 数据库
             const DATABASE = event.target.result
 
+            // 监听数据库被其他标签页删除
+            DATABASE.onversionchange = () => {
+                DATABASE.close()
+            }
+
             // 获取数据请求
             function getRequest(name, url) {
 
