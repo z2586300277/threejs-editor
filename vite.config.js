@@ -53,7 +53,9 @@ export default defineConfig({
 
     alias: {
 
-      'three': path.resolve(__dirname, 'node_modules/three')
+      find: /^three$/,
+      
+      replacement: path.resolve(__dirname, 'node_modules/three')
 
     }
 

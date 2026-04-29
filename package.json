@@ -11,23 +11,23 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "3d-tiles-renderer": "^0.4.14",
+    "3d-tiles-renderer": "^0.4.24",
     "@element-plus/icons-vue": "^2.3.2",
     "cannon-es": "^0.20.0",
     "echarts": "^5.6.0",
-    "element-plus": "^2.10.6",
-    "gsap": "^3.13.0",
-    "less": "^4.4.0",
-    "less-loader": "^12.3.0",
-    "postprocessing": "^6.37.8",
+    "element-plus": "^2.13.7",
+    "gsap": "^3.15.0",
+    "less": "^4.6.4",
+    "less-loader": "^12.3.2",
+    "postprocessing": "^6.39.1",
     "three": "0.180.0",
-    "three-edit-cores": "^0.0.15",
-    "three-tile": "^0.11.11",
-    "vue": "^3.5.18",
-    "vue-router": "^4.5.1"
+    "three-edit-cores": "^0.0.16",
+    "three-tile": "^0.11.14",
+    "vue": "^3.5.33",
+    "vue-router": "^4.6.4"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.2.4",
-    "vite": "^6.3.5"
+    "vite": "^6.4.2"
   }
 }
