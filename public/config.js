@@ -77,13 +77,17 @@ window.footerLinks = {
     right: [
         { text: "🍂GitHub", url: "https://github.com/z2586300277/threejs-editor" },
 
+        { text: "🐸GoView集成", url: "https://z2586300277.github.io/go-view-three-editor" },
+        
         { text: "⚡直接下载", url: "https://pan.quark.cn/s/1f507069e8f1" }
         // { text: "⚡直接下载", url: "https://pan.baidu.com/s/1oECy2VqUmQeSl55DDdEnvw?pwd=bgue" }
     ],
     left: [
         { text: "🍃开源案例", url: "https://z2586300277.github.io/three-cesium-examples" },
 
-        { text: "🍁新版文档", url: "https://z2586300277.github.io/editor-docs/" }
+        { text: "🍁新版文档", url: "https://z2586300277.github.io/editor-docs/" },
+
+        { text: "🍎新-测试版", url: "https://z2586300277.github.io/threejs-editor-beta" }
     ]
 };
 
@@ -92,7 +96,7 @@ script.src = 'https://z2586300277.github.io/editorJson/v2.js';
 document.head.appendChild(script);
 
 // 版权信息
-window.copyright = "©2025 2586300277@qq.com All Rights Reserved.";
+window.copyright = "©2026 北京优悦幻光科技有限公司 All Rights Reserved.";
 
 // 创建dom - 精简版
 const readmeFn = function () {

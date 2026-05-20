@@ -94,7 +94,7 @@
             </el-radio-button>
             <el-radio-button label="旋转" value="旋转">
               <el-icon>
-                <RefreshRight />
+                <Refresh />
               </el-icon>旋转
             </el-radio-button>
             <el-radio-button label="缩放" value="缩放">
@@ -102,11 +102,11 @@
                 <ZoomIn />
               </el-icon>缩放
             </el-radio-button>
-            <!-- <el-radio-button label="无操作" value="无操作">
+            <el-radio-button label="预览" value="预览">
               <el-icon>
                 <Remove  />
-              </el-icon>无操作
-            </el-radio-button> -->
+              </el-icon>预览
+            </el-radio-button>
           </el-radio-group>
             <span class="divider"></span>
             <el-button-group size="small">
@@ -156,28 +156,24 @@
           <div class="shortcuts-content" v-show="openKeyEnable">
             <div class="shortcuts-grid">
               <div class="shortcuts-section">
-                <div class="section-title">键盘操作</div>
                 <div class="shortcut-row"><span class="key">Shift+Tab</span><span class="desc">根/子 切换</span></div>
-                <div class="shortcut-row"><span class="key">↑/↓</span><span class="desc">子 层级</span></div>
-                <div class="shortcut-row"><span class="key">Ctrl+C </span><span class="desc">复制选中</span></div>
+                <div class="shortcut-row"><span class="key">↑/↓</span><span class="desc">子层级切换</span></div>
               </div>
               <div class="shortcuts-section">
-                <div class="section-title">变换模式</div>
-                <div class="shortcut-row"><span class="key">R</span><span class="desc">旋转</span></div>
-                <div class="shortcut-row"><span class="key">G</span><span class="desc">平移</span></div>
-                <div class="shortcut-row"><span class="key">T</span><span class="desc">缩放</span></div>
+                <div class="shortcut-row"><span class="key">Tab</span><span class="desc">变换⟷选择</span></div>
+                <div class="shortcut-row"><span class="key">R/T/G</span><span class="desc">旋转/平移/缩放</span></div>
               </div>
               <div class="shortcuts-section">
-                <div class="section-title">变换操作</div>
                 <div class="shortcut-row"><span class="key">Q,W,E,A,S,D</span><span class="desc">XYZ轴微调</span></div>
                 <div class="shortcut-row"><span class="key">Shift+X/Y/Z</span><span class="desc">轴旋转90度</span></div>
+              </div>
+              <div class="shortcuts-section">
+                <div class="shortcut-row"><span class="key">Ctrl+C </span><span class="desc">复制选中</span></div>
                 <div class="shortcut-row"><span class="key">Ctrl+Z/Y</span><span class="desc">撤销/反撤销</span></div>
               </div>
               <div class="shortcuts-section">
-                <div class="section-title">其他操作</div>
-                <div class="shortcut-row"><span class="key">Tab</span><span class="desc">变换⟷选择</span></div>
-                <div class="shortcut-row"><span class="key">Del</span><span class="desc">删除</span></div>
-                <div class="shortcut-row"><span class="key">Esc</span><span class="desc">退出操作</span></div>
+                <div class="shortcut-row"><span class="key">Del</span><span class="desc">删除选中</span></div>
+                <div class="shortcut-row"><span class="key">Esc</span><span class="desc">取消选中</span></div>
               </div>
             </div>
           </div>
@@ -193,7 +189,7 @@
 import { defineAsyncComponent, reactive, ref, watch } from 'vue'
 import EditorVue from './editor.vue'
 import { ElButton, ElSelect, ElOption, ElMessage, ElIcon, ElMessageBox } from 'element-plus'
-import { Pointer, Position, RefreshRight, ZoomIn, Remove  } from '@element-plus/icons-vue'
+import { Pointer, Position, RefreshRight, ZoomIn, Remove, Refresh } from '@element-plus/icons-vue'
 import LeftPanel from './left.vue'
 import RightPanel from './right.vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -263,13 +259,14 @@ if (localStorage.getItem('new_previewScene') === 'true') {
 watch(currentMode, (val) => {
   const { transformControls } = threeEditor
   if (val === '选中') threeEditor.handler.mode = 'select'
-  else if(val === '无操作') threeEditor.handler.mode = 'none'
+  else if(val === '预览') threeEditor.handler.mode = 'none'
   else threeEditor.handler.mode = 'transform'
   if (val === '平移') transformControls.setMode('translate')
   else if (val === '旋转') transformControls.setMode('rotate')
   else if (val === '缩放') transformControls.setMode('scale')
 })
 
+/* 这是内置事件 如不需要也可以自行使用原生 射线获取场景点击 */
 const getEvent = (e) => {
   threeEditor.getSceneEvent(e, info => {
      info.rootObject?.EVENTCALL?.(info) // 添加在定义点击事件处理
@@ -281,18 +278,20 @@ const emitThreeEditor = (threeEditor) => {
   rightPanel.value.helperConf(threeEditor)
   rightPanel.value.startEditor(threeEditor)
   window.threeEditor = threeEditor
-  openKeyEnable.value = threeEditor.handler.openKeyEnable
-  rightClickMenusEnable.value = threeEditor.handler.rightClickMenusEnable
-  selectChildMode.value = threeEditor.handler.selectChildEnabled
-  Object.defineProperty(threeEditor.handler, 'openKeyEnable', {
-    get() {
-      return this._openKeyEnable ?? false
-    },
-    set(val) {
-      this._openKeyEnable = val
-      openKeyEnable.value = val
+
+  // 轮询 handler 状态，值变化时才同步到工具栏 Vue ref
+  const tcModeMap = { translate: '平移', rotate: '旋转', scale: '缩放' }
+  setInterval(() => {
+    try {
+    const { handler, transformControls } = threeEditor
+    if (openKeyEnable.value !== handler.openKeyEnable) openKeyEnable.value = handler.openKeyEnable
+    if (rightClickMenusEnable.value !== handler.rightClickMenusEnable) rightClickMenusEnable.value = handler.rightClickMenusEnable
+    if (selectChildMode.value !== handler.selectChildEnabled) selectChildMode.value = handler.selectChildEnabled
+    const newMode = handler.mode === 'select' ? '选中' : handler.mode === 'none' ? '预览' : (tcModeMap[transformControls.mode] ?? '平移')
+    if (currentMode.value !== newMode) currentMode.value = newMode
+    } catch (error) {
     }
-  })
+  }, 600)
 }
 
 function saveLocal() {
@@ -678,8 +677,8 @@ const handleRedo = () => {
 
 .shortcuts-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
+  grid-template-columns: repeat(5, 1fr);
+  // gap: 10px;
 }
 
 .shortcuts-section {
