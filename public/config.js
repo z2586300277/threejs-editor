@@ -96,7 +96,7 @@ script.src = 'https://z2586300277.github.io/editorJson/v2.js';
 document.head.appendChild(script);
 
 // 版权信息
-window.copyright = "©2025 2586300277@qq.com All Rights Reserved.";
+window.copyright = "©2026 北京优悦幻光科技有限公司 All Rights Reserved.";
 
 // 创建dom - 精简版
 const readmeFn = function () {
